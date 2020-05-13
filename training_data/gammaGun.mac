@@ -1,0 +1,35 @@
+# Macro file for example 
+# 
+# To be run preferably in batch, without graphics:
+# % example[a,b,c,d] run2.mac
+#
+#/run/numberOfWorkers 4
+/run/initialize
+#
+# Default kinemtics: 
+# electron 50 MeV in direction (0.,0.,1.)
+# 1000 events
+#
+/run/printProgress 1
+/run/verbose 2
+#/gun/particle e-
+#/gun/particle pi0
+#/gun/particle pi+
+#/gun/particle gamma
+#/gun/energy 10 GeV
+#/run/beamOn 10
+
+#see https://geant4.web.cern.ch/geant4/UserDocumentation/UsersGuides/ForApplicationDeveloper/html/ch02s07.html for details.
+#/gps/List #lists the particles you can shoot with G4
+/gps/particle gamma
+/gps/pos/type Beam
+/gps/pos/centre 0.0 50.0 0.0
+/gps/direction 0 1 0
+/gps/ene/type Pow
+/gps/ene/min 10.0 GeV	
+/gps/ene/max 100.0 GeV
+/gps/ene/alpha 0.
+
+
+/gps/number 1 
+/run/beamOn 1000

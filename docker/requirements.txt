@@ -1,0 +1,11 @@
+numpy 
+scikit-learn 
+uproot 
+matplotlib 
+pandas
+scipy
+h5py
+jupyter
+torchsummary
+tensorflow
+tensorboardX
