@@ -1,7 +1,7 @@
 # Generative Models for High-granularity Calorimeter of ILD
 We are modelling electromagnetic showers in the central region of the Silicon-Tungsten calorimeter of the proposed ILD. We investigate the use of a new architecture: Bounded-Information Bottleneck Autoencoder. In addition, we are utilising WGAN-GP and vanilla GAN approaches. In total, we train 3 generative models. 
 
-This repository contains ingredients for repoducing *Getting High: High Fidelity Simulation of High Granularity Calorimeters with High Speed* ```[arxiv:2005.05335]```
+This repository contains ingredients for repoducing *Getting High: High Fidelity Simulation of High Granularity Calorimeters with High Speed* [[`arXiv:2005.05334`](https://arxiv.org/abs/2005.05335)]
 
 ## Data Generation and Preparation 
 
@@ -52,11 +52,25 @@ singularity run -H $PWD docker://engineren/pytorch:latest python create_hdf5.py 
 ```
 
 ### Step 4: Remove staggering effects 
-Our simulation of ILD calorimeter is a realistic one. That's why we have irregularities in geometry. This causes staggering in `x` direction; we see artifacts (i.e empty lines due to binning). In order to mitigate this effect, we apply another processing so that we move empty lines to the edged and cut the image. 
+Our simulation of ILD calorimeter is a realistic one. That's why we have irregularities in geometry. This causes staggering in `x` direction; we see artifacts (i.e empty lines due to binning). In order to mitigate this effect, we apply a correction and thus remove artifacts.
 
 ```
-singularity run -H $PWD docker://engineren/pytorch:latest python corrections.py --input test_30x32.hdf5 --output test_corr.hdf5 --batchsize 100 --minibatch 10
+singularity run -H $PWD docker://engineren/pytorch:latest python corrections.py --input test_30x32.hdf5 --output showers-1k.hdf5 --batchsize 100 --minibatch 10
 ```
 
-choose batchsize and mini-batch size such a way that `total showers = batchsize  * minibatch` (In our case; 1000 = 100 * 10 )
+choose batchsize and mini-batch size such a way that `total showers = batchsize  * minibatch` (i.e 1000 = 100 * 10 )
+
+### Structure of HDF5 file
+
+Created file `showers-1k.hdf5` has the following structure: 
+* Group named `30x30`
+     * `energy`               : Dataset {1000, 1}
+     * `layers`               : Dataset {1000, 30,30,30}
+
+As stated in our paper, we have trained our model on 950k showers, which is approximately 200 Gb. That is why we are able to put only a small fraction of our training data to [[`Zenado`](https://zenodo.org/record/3826103#.Xrz1RBZS-EI)]
+ 
+
+
+## Training
+
 

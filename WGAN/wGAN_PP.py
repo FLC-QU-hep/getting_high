@@ -18,7 +18,7 @@ import torch.nn.init as init
 import models.HDF5Dataset as H
 
 
-from models.dcgan3Dv6 import *
+from models.dcgan3D import *
 from models.constrainer3D import *
 from models.postp import *
 
