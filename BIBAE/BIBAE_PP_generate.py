@@ -28,8 +28,7 @@ model_BIBAE_PP = models.PostProcess_Size1Conv_EcondV2(bias=True, out_funct='none
 model_BIBAE_PP = nn.DataParallel(model_BIBAE_PP)
 
 #load combined BIBAE PP statedict
-checkpoint_BIBAE_PP = torch.load('/beegfs/desy/user/diefenbs/VAE_results/2020_KW13/3D_M_BiBAESmLVar_P_1ConvEconV2_C_ConvDiffv3_CL_Default_KLD005_MDL_PMDKS_L24_512_1MCor/'+
-                              'check_3D_M_BiBAESmLVar_P_1ConvEconV2_C_ConvDiffv3_CL_Default_KLD005_MDL_PMDKS_L24_512_1MCor_39.pth', map_location=torch.device(device))
+checkpoint_BIBAE_PP = torch.load('*path_to_saved_checkpoint*.pth', map_location=torch.device(device))
 
 #apply statedicts to apropriate models
 model_BIBAE.load_state_dict(checkpoint_BIBAE_PP['model_state_dict']) 

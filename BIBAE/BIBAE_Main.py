@@ -13,7 +13,6 @@ from torch.multiprocessing import Process
 
 import BIBAE_models as models
 import BIBAE_functions as functions
-import skimage.measure
 import time
 
 import importlib
