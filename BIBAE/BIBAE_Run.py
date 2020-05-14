@@ -39,8 +39,8 @@ L_P_Losses =  [L_P_KLD,         L_P_ENR_RECON,
 
 params = {
         #I-O parameters:
-        'input_path'  : '/beegfs/desy/user/diefenbs/gamma-fullG-950kCorrected.hdf5',  #path for input file
-        'output_path' : '/beegfs/desy/user/diefenbs/VAE_results/test/', #path where models are saved
+        'input_path'  : '*path_to_input*.hdf5',                         #path for input file
+        'output_path' : './results/',                                   #path where models are saved
         'log_interval': 1,                                              #number of iterations after which progess is printed
         'save_interval': 1,                                             #number of epochs after which wieghts are saved
         'sample_interval': 1,                                           #number of epochs after which example images are generated
@@ -52,7 +52,7 @@ params = {
     
         #Model definitions
         'model': '3D_M_BiBAESmLVar_P_None_C_ConvDiffv3_CL_Default',     #picks model setup to train with, defined in Main
-        'suffix': '_KLD005_MDL_L24_512_1MCor',                          #wights are saved as 'model' + 'suffix' + epoch.pth
+        'suffix': '_KLD005_MMDL_L24_512',                               #weights are saved as 'model' + 'suffix' + epoch.pth
         'E_cond': True,                                                 #Turns energy conditioning on/off
         "latentSmL":24,                                                 #Number of active latent space dimensions
         "latent":512,                                                   #Total numver of latent space dimension, if more then 'latentSmL'
