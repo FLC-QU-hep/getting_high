@@ -19,14 +19,14 @@ copy all `.py`, `.sh` and `create_root_tree.xml` files to this folder from `trai
 
 We use `singularity` (with `docker` image) to generate Geant4 showers. Please export necessary singularity **tmp** and **cache** for convenience. 
 
-```
+```bash
 export SINGULARITY_TMPDIR=/nfs/dust/ilc/user/eren/container/tmp/
 export SINGULARITY_CACHEDIR=/nfs/dust/ilc/user/eren/container/cache/
 
 ```
 Please change it for **your** scratch space. Now we can start the instance and run it
 
-```
+```bash
 singularity instance start -H $PWD --bind $(pwd):/home/ilc/data docker://ilcsoft/ilcsoft-centos7-gcc8.2:v02-01-pre instance1
 singularity run instance://instance1 ./generateG4-gun.sh instance1
 
@@ -37,7 +37,7 @@ This generates **1000 showers**. Play with `gammaGun.mac` if you want to change 
 #### Step 2: Marlin framework to create root files
 Now we would like to use `Marlin` framework in `iLCsoft`. `Marlin` takes `lcio` file, which was created in the previous step and creates `root` file
 
-```
+```bash
 ## copy create_root_tree.xml and marlin.sh file 
 singularity run instance://instance1 ./marlin.sh "photon-shower-instance1.slcio"
 
@@ -46,7 +46,7 @@ singularity run instance://instance1 ./marlin.sh "photon-shower-instance1.slcio"
 #### Step 3: Conversion to hdf5 files
 It is handy to use `uproot` framework to stream showers from `root` file in order to create `hdf5` file, which is really important for our neutral network achiterctures. 
 
-```
+```bash
 singularity run -H $PWD docker://engineren/pytorch:latest python create_hdf5.py --ncpu 8 --rootfile testNonUniform.root --branch photonSIM --batchsize 100
 
 ```
@@ -54,7 +54,7 @@ singularity run -H $PWD docker://engineren/pytorch:latest python create_hdf5.py 
 #### Step 4: Remove staggering effects 
 Our simulation of ILD calorimeter is a realistic one. That's why we have irregularities in geometry. This causes staggering in `x` direction; we see artifacts (i.e empty lines due to binning). In order to mitigate this effect, we apply a correction and thus remove artifacts.
 
-```
+```bash
 singularity run -H $PWD docker://engineren/pytorch:latest python corrections.py --input test_30x32.hdf5 --output showers-1k.hdf5 --batchsize 100 --minibatch 10
 ```
 
@@ -108,13 +108,13 @@ In order to train our generative models, please make sure you downloaded `hdf5` 
 
 It is convinient to export singularity `cache` and `tmp` directory before running. 
 
-```
+```bash
 export SINGULARITY_TMPDIR=/path/to/your/container/tmp
 export SINGULARITY_CACHEDIR=/path/to/your/container/cache/
 ```
 then run the training with the docker image, which contains all the dependencies required for the training. 
 
-```
+```bash
 git clone https://github.com/FLC-QU-hep/getting_high.git
 cd getting_high
 singularity run --nv docker://engineren/pytorch:latest python BIBAE/BIBAE_Run.py
@@ -126,7 +126,7 @@ singularity run --nv docker://engineren/pytorch:latest python BIBAE/BIBAE_Run.py
 
 This is option for training WGAN model exclusively on a single GPU. You might want to adjust `batch_size` in the `main()` function so that data fits into your GPU's memory. Also, please make sure that `output` and `exp` paths exist before you run the training process.  
 
-```
+```bash
 ## assuming you are still in the getting_high/ directory
 singularity run --nv docker://engineren/pytorch:latest python WGAN/wGAN.py
 
@@ -135,7 +135,7 @@ singularity run --nv docker://engineren/pytorch:latest python WGAN/wGAN.py
 
 With this option, you are able to run WGAN model across distributed GPUs (i.e GPUs which are in different physical machines) in your cluster. We are using Maxwell cluster at DESY with `slurm` workload manager enabled. 
 
-```
+```bash
 #!/bin/bash
 
 #SBATCH --partition=
@@ -156,7 +156,7 @@ cd /path/to/your/repo/getting_high
 export SINGULARITY_TMPDIR=/path/to/your/container/tmp
 export SINGULARITY_CACHEDIR=/path/to/your/container/cache/
 
-# necessary for output weights. Make sure you have the same filename inside wGAN_DDP.py
+# make sure you have the same filename inside wGAN_DDP.py
 mkdir -p output/WGANv1
 
 ## start the containers
