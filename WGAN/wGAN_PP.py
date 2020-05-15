@@ -38,10 +38,6 @@ def weights_init(m):
         m.bias.data.fill_(0)    
 
 
-def getTotE(data):
-    x = data.view(-1, data.size(1)*data.size(2)*data.size(3))
-    return torch.sum(x, 1)
-
 
 
 def calc_gradient_penalty(netD, real_data, fake_data, real_label, BATCH_SIZE, device, DIM):
@@ -118,14 +114,11 @@ def mmd_hit_sortKernel(recon_x_sorted, x_sorted, kernel_size, stride, cutoff, al
     return (torch.mean(out)/norm_out)
 
 
-def cleanup():
-    dist.destroy_process_group()
+
 
 
 def train(rank, defparams):
     
-    
-
     params = {}
     for param in defparams.keys():
         params[param] = defparams[param]
@@ -137,10 +130,6 @@ def train(rank, defparams):
     world_size = int(os.environ["SLURM_NNODES"])
     rank = int(os.environ["SLURM_PROCID"])
 
-    #print (world_size, rank)
-    #world_size = 2
-    #rank = 2 
-
     dist.init_process_group(                                  
         backend='nccl',  
         world_size=world_size,                             
@@ -149,11 +138,10 @@ def train(rank, defparams):
     )                            
 
 
-    if params["data_dim"] == 3:
-        aD = DCGAN_D(params["ndf"]).to(device)
-        aG = DCGAN_G(params["ngf"], params["z"]).to(device)
-        aE = energyRegressor().to(device)
-        aP = PostProcess_Size1Conv_EcondV2(30, 3, 128, bias=True, out_funct='none').to(device)
+    aD = DCGAN_D(params["ndf"]).to(device)
+    aG = DCGAN_G(params["ngf"], params["z"]).to(device)
+    aE = energyRegressor().to(device)
+    aP = PostProcess_Size1Conv_EcondV2(30, 3, 128, bias=True, out_funct='none').to(device)
 
     aG = nn.parallel.DistributedDataParallel(aG, device_ids=[0])
     aD = nn.parallel.DistributedDataParallel(aD, device_ids=[0])
@@ -177,7 +165,6 @@ def train(rank, defparams):
         aE.load_state_dict(torch.load(params["calib_saved"], map_location=torch.device(device)))
     
     
-
     
     one = torch.tensor(1.0).to(device)
     mone = (one * -1).to(device)
@@ -278,8 +265,6 @@ def train(rank, defparams):
 
             ######
 
-            
-
             # train with real data
             
             disc_real = aD(real_data.float(), real_label.float())
@@ -299,7 +284,7 @@ def train(rank, defparams):
             disc_cost = torch.mean(disc_fake) - torch.mean(disc_real) + params["lambda"] * gradient_penalty
             disc_cost.backward()
             optimizer_d.step()
-            #------------------VISUALIZATION----------
+            #------------------VISUALIZATION in Tensorboard----------
             if i == params["ncrit"]-1:
                 writer.add_scalar('data/disc_cost', disc_cost, iteration)
                 writer.add_scalar('data/gradient_pen', gradient_penalty * params["lambda"], iteration)
@@ -434,13 +419,12 @@ def train(rank, defparams):
 
 
 
-        #---------------VISUALIZATION---------------------
+        #---------------VISUALIZATION in Tensorboard---------------------
         if params["ngen"]:
             writer.add_scalar('data/gen_cost', gen_cost.mean(), iteration)
             writer.add_scalar('data/e_loss_aG', aux_errG.mean(), iteration)
         
         if params["train_postP"]:
-            #writer.add_scalar('data/lossFixP', lossFixP.mean(), iteration)
             writer.add_scalar('data/lossD_P', lossD_P.mean(), iteration)
             writer.add_scalar('data/lossMSE', lossFixPp2.mean(), iteration)
             writer.add_scalar('data/lossMMD', lossFixPp1.mean(), iteration)
@@ -460,16 +444,16 @@ def train(rank, defparams):
         #scheduler_g.step()
         #scheduler_e.step()
 
-        #cleanup()
+        
 
 def main():
     
     default_params = {
 
         ## IO parameters
-        "input_path" : '/beegfs/desy/user/eren/improved-wgan-pytorch/data/800kCorr.hdf5',
-        "output_path" : '/beegfs/desy/user/eren/improved-wgan-pytorch/output/',
-        "exp" : 'WGANv5p7postp5',
+        "input_path" : '/*path-to-data-file*',
+        "output_path" : '/*path-to-yout-output-path*/',
+        "exp" : 'WGANv1',                   ## where the models will be saved!
         "data_dim" : 3,
         ## model parameters
         "ngf" : 32,  
@@ -478,7 +462,7 @@ def main():
         "dim" : 30,
         ## optimizer parameters 
         "opt" : 'Adam',
-        "L_gen" : 1e-05,
+        "L_gen" : 1e-04,
         "L_crit" : 1e-05,
         "L_calib" : 1e-05,
         "L_post"  : 1e-07,
@@ -496,24 +480,24 @@ def main():
         "wMMD" : 5.0,
         "wMSE" : 1.0,
         ## checkpoint parameters
-        "restore" : True,
-        "restore_pp" : True,
-        "restore_path" : '/beegfs/desy/user/eren/improved-wgan-pytorch/output/WGANv5p7/',
-        "restore_path_PP": '/beegfs/desy/user/eren/improved-wgan-pytorch/output/WGANv5p7postp4/',
-        "gen_saved" : 'netG_itrs_21999.pth',
-        "crit_saved" : 'netD_itrs_21999.pth',
-        "calib_saved" : '/beegfs/desy/user/eren/improved-wgan-pytorch/output/WGANv3-mmdv3p3/netE_itrs_18999.pth',
-        "post_saved" : 'netP_itrs_74999.pth',
+        "restore" : False,
+        "restore_pp" : False,
+        "restore_path" : '/*-path-to-checkpoint-folder*/',
+        "restore_path_PP": '/*-path-checkpoint-folder-postprocessing*/',
+        "gen_saved" : 'netG_itrs_XXXX.pth',
+        "crit_saved" : 'netD_itrs_XXXX.pth',
+        "calib_saved" : '/*path-to-constrainer-network*/netE_itrs_XXXX.pth',
+        "post_saved" : 'netP_itrs_XXXX.pth',
         "c0" : False,                   ## randomly starts calibration networks parameters
         "c1" : True,                    ## starts from a saved model
         "train_calib": False,           ## you might want to turn off constrainer network training
         "train_postP": True,
         ## distributed training
-        "world_size" : 3,       #Total number of processes
-        "nr" : 1,               #Process id, set when launching
-        "gpus" : 1,             #For multi GPU Nodes, defines Number of GPU per node
-        "gpu" : 0,              #For multi GPU Nodes, defines index of GPUs on node
-        "DDP_init_file" : 'file:///beegfs/desy/user/eren/improved-wgan-pytorch/MPI/DDPv5postprocp5',
+        "world_size" : 3,           #Total number of processes
+        "nr" : 1,                   #Process id, set when launching
+        "gpus" : 1,                 #For multi GPU Nodes, defines Number of GPU per node
+        "gpu" : 0,                  #For multi GPU Nodes, defines index of GPUs on node
+        "DDP_init_file" : 'file:///*path-to-ddp-file*',
         "multi_gpu":False,
         "seed": 32,
 

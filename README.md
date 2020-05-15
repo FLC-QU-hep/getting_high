@@ -75,7 +75,7 @@ The network architectures of generative models have a large number of moving par
 
 ### GAN
 ![GAN](figures/VGAN.png)
-Our implementation of the `vanilla` GAN is a baseline model consisting of a generator and a discriminator. The generator network of the GAN consists of 3-dimensional transposed convolution layers with batch normalization. It takes a noise vector of length 100, uniformly distributed from -1 to 1, and the true energy labels E as inputs. The discriminator uses five 3-dimensional convolution layers followed by two fully connected layers with 257 and 128 nodes respectively. We flatten the output of the convolutions and concatenate it the with input energy before passing it to the fully connected layers. Each fully connected layer except the final one uses LeakyReLU [59] (slope: −0.2) as an activation function. The activation in the final layer is sigmoid. In total, the generator has 1.5M trainable weights and the discriminator has 2.0M weights. 
+Our implementation of the `vanilla` GAN is a baseline model consisting of a generator and a discriminator. The generator network of the GAN consists of 3-dimensional transposed convolution layers with batch normalization. It takes a noise vector of length 100, uniformly distributed from -1 to 1, and the true energy labels E as inputs. The discriminator uses five 3-dimensional convolution layers followed by two fully connected layers with 257 and 128 nodes respectively. We flatten the output of the convolutions and concatenate it the with input energy before passing it to the fully connected layers. Each fully connected layer except the final one uses LeakyReLU (slope: −0.2) as an activation function. The activation in the final layer is sigmoid. In total, the generator has 1.5M trainable weights and the discriminator has 2.0M weights. 
 
 ### WGAN
 ![WGAN](figures/WGAN.png)
@@ -91,7 +91,9 @@ The energy-constrainer network is similar to the critic: three 3D convolutions w
 
 ### BIB-AE and Post Processing
 ![Bib-AE](figures/BAE_PP.png)
+An instructive way for describing the base BIB-AE framework is by taking a VAE and expanding upon it. A default VAE consist of four general components: an encoder, a decoder, a latent-space regularized by the Kullback--Leibler divergence (KLD), and an $L_N$-norm to determine the difference between the original and the reconstructed data. These components are all present as well in the BIB-AE setup. Additionally, one introduces a GAN-like adversarial network, trained to distinguish between real and reconstructed data, as well as a sampling based method of regularizing the latent space, such as another adversarial network or a maximum mean discrepancy (MMD, as described in the next section) term. In total this adds up to four loss terms: The KLD on the latent space, the sampling regularization on the latent space, the L<sub>N</sub> norm on the reconstructed samples and the adversary on the reconstructed samples. The guiding principle behind this is that the two latent space and the two reconstruction losses complement each other and, in combination, allow the network to learn a more detailed description of the data.
 
+Please refer to our paper *Appendix A.3* a more detailed description of BiB-AE and Post Processing network architectures. 
 
 
 ## Training
