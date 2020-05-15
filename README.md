@@ -11,7 +11,7 @@ We use `iLCsoft` which includes `ddsim` and `Geant4`. It is better to use genera
 First we need to pull `ILDConfig` repository and go to its specific folder.
 
 ```
-git clone https://github.com/iLCSoft/ILDConfig.git
+git clone --branch v02-01-pre02 vhttps://github.com/iLCSoft/ILDConfig.git
 cd ILDConfig/StandardConfig/production
 ```
 copy all `.py`, `.sh` and `create_root_tree.xml` files to this folder from `training_data` folder. 
@@ -91,21 +91,76 @@ The energy-constrainer network is similar to the critic: three 3D convolutions w
 
 ### BIB-AE and Post Processing
 ![Bib-AE](figures/BAE_PP.png)
-An instructive way for describing the base BIB-AE framework is by taking a VAE and expanding upon it. A default VAE consist of four general components: an encoder, a decoder, a latent-space regularized by the Kullback--Leibler divergence (KLD), and an $L_N$-norm to determine the difference between the original and the reconstructed data. These components are all present as well in the BIB-AE setup. Additionally, one introduces a GAN-like adversarial network, trained to distinguish between real and reconstructed data, as well as a sampling based method of regularizing the latent space, such as another adversarial network or a maximum mean discrepancy (MMD, as described in the next section) term. In total this adds up to four loss terms: The KLD on the latent space, the sampling regularization on the latent space, the L<sub>N</sub> norm on the reconstructed samples and the adversary on the reconstructed samples. The guiding principle behind this is that the two latent space and the two reconstruction losses complement each other and, in combination, allow the network to learn a more detailed description of the data.
+An instructive way for describing the base BIB-AE framework is by taking a VAE and expanding upon it. A default VAE consist of four general components: an encoder, a decoder, a latent-space regularized by the Kullback--Leibler divergence (KLD), and an L<sub>N</sub>-norm to determine the difference between the original and the reconstructed data. These components are all present as well in the BIB-AE setup. Additionally, one introduces a GAN-like adversarial network, trained to distinguish between real and reconstructed data, as well as a sampling based method of regularizing the latent space, such as another adversarial network or a maximum mean discrepancy (MMD, as described in the next section) term. In total this adds up to four loss terms: The KLD on the latent space, the sampling regularization on the latent space, the L<sub>N</sub> norm on the reconstructed samples and the adversary on the reconstructed samples. The guiding principle behind this is that the two latent space and the two reconstruction losses complement each other and, in combination, allow the network to learn a more detailed description of the data.
 
 Please refer to our paper *Appendix A.3* a more detailed description of BiB-AE and Post Processing network architectures. 
 
 
 ## Training
 
-Please make sure you downloaded `hdf5` file from Zenado and put it into `training_data` folder.
+In order to train our generative models, please make sure you downloaded `hdf5` file from Zenado and put it into `training_data` folder. Alternatively, you can contact authors and ask for more data or you could generate yourself by following instructions above. 
+
 ### Bib-AE
 
 1. Choose BIBAE_Run for BIBAE training or BIBAE_PP_Run for BIBAE with post processing training
 2. Modify parameters accoring to your need
 3. launch python BIBAE_Run.py or python BIBAE_PP_Run.py 
 
+It is convinient to export singularity `cache` and `tmp` directory before running. 
+
 ```
+export SINGULARITY_TMPDIR=/path/to/your/container/tmp
+export SINGULARITY_CACHEDIR=/path/to/your/container/cache/
+```
+then run the training with the docker image, which contains all the dependencies required for the training. 
+
+```
+git clone https://github.com/FLC-QU-hep/getting_high.git
+cd getting_high
 singularity run --nv docker://engineren/pytorch:latest python BIBAE/BIBAE_Run.py
+
+```
+### WGAN
+
+#### Option 1: Running on a single GPU
+
+This is option for training WGAN model exclusively on a single GPU. You might want to adjust `batch_size` in the `main()` function so that data fits into your GPU's memory. Also, please make sure that `output` and `exp` paths exist before you run the training process.  
+
+```
+## assuming you are still in the getting_high/ directory
+singularity run --nv docker://engineren/pytorch:latest python WGAN/wGAN.py
+
+```
+#### Option 2: Running on distributed GPUs 
+
+With this option, you are able to run WGAN model across distributed GPUs (i.e GPUs which are in different physical machines) in your cluster. We are using Maxwell cluster at DESY with `slurm` workload manager enabled. 
+
+```
+#!/bin/bash
+
+#SBATCH --partition=
+#SBATCH --nodes=3                                 # Number of nodes
+#SBATCH --time=24:00:00     
+#SBATCH --constraint="V100"
+#SBATCH --chdir   /path/to/your/directory          # directory must already exist!
+#SBATCH --job-name  wGAN
+#SBATCH --output    wGAN-%N.out            # File to which STDOUT will be written
+#SBATCH --error     wGAN-%N.err            # File to which STDERR will be written
+#SBATCH --wait-all-nodes=1
+#SBATCH --mail-type END 
+
+## go to the target directory
+cd /path/to/your/repo/getting_high
+
+## Setup tmp and cache directory of singularity
+export SINGULARITY_TMPDIR=/path/to/your/container/tmp
+export SINGULARITY_CACHEDIR=/path/to/your/container/cache/
+
+# necessary for output weights. Make sure you have the same filename inside wGAN_DDP.py
+mkdir -p output/WGANv1
+
+## start the containers
+srun -N 3 singularity run --nv docker://engineren/pytorch:latest python WGAN/wGAN_DDP.py
+
 
 ```

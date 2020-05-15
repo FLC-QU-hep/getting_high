@@ -1,0 +1,4 @@
+training_data/*.hdf5
+output/*
+runs/*
+WGAN/models/__pycache__/*
