@@ -75,15 +75,22 @@ The network architectures of generative models have a large number of moving par
 
 ### GAN
 ![GAN](figures/VGAN.png)
-Our implementation of the `vanilla` GAN is a baseline model consisting of a generator and a discriminator. The generator network of the GAN consists of 3-dimen-
-sional transposed convolution layers with batch normalization. It takes a noise vector of length 100, uniformly distributed from -1 to 1, and the true energy labels E as inputs. The discriminator uses five 3-dimensional convolution layers followed by two fully connected layers with 257 and 128 nodes respectively. We flatten the output of the convolutions and concatenate it the with input energy before passing it to the fully connected layers. Each fully connected layer except the final one uses LeakyReLU [59] (slope: −0.2) as an activation function. The activation in the final layer is sigmoid. In total, the generator has 1.5M trainable weights and the discriminator has 2.0M weights. 
+Our implementation of the `vanilla` GAN is a baseline model consisting of a generator and a discriminator. The generator network of the GAN consists of 3-dimensional transposed convolution layers with batch normalization. It takes a noise vector of length 100, uniformly distributed from -1 to 1, and the true energy labels E as inputs. The discriminator uses five 3-dimensional convolution layers followed by two fully connected layers with 257 and 128 nodes respectively. We flatten the output of the convolutions and concatenate it the with input energy before passing it to the fully connected layers. Each fully connected layer except the final one uses LeakyReLU [59] (slope: −0.2) as an activation function. The activation in the final layer is sigmoid. In total, the generator has 1.5M trainable weights and the discriminator has 2.0M weights. 
 
 ### WGAN
 ![WGAN](figures/WGAN.png)
+One alternative to classical GAN training is to use the Wasserstein-1 distance, also known as earth mover's distance, as a loss function. The WGAN architecture consists of 3 networks: one generator with 3.7M weights, one critic with 250k weights, and one constrainer network with 220k weights.
+
+The critic network starts with four 3D convolution layers with kernel sizes ($X$,2,2) with `X=10,6,4,4` which have 32, 64, 128, and 1 filters respectively. LayerNorm layers are sandwiched between the convolutions. After the last convolution, the output is concatenated with the `E` vector required for $E-$conditioning. After that, it is flattened and fed into a fully connected network with 91, 100, 200, 100, 75, 1 nodes. Throughout the critic, LeakyReLU (slope: $-0.2$) is used as activation function.
+
+The generator network takes a latent vector `z` (normally distributed with length 100) and true `E` labels as input and separately passes them through a 3D transposed convolution layer using a `4x4x4` kernels with 128 filters. After that, the outputs are concatenated and processed through a series of four 3D transposed convolution layers (kernel size `4x4x4` with filters of 256, 128, 64, 32).  LayerNorm layers along with ReLU activation functions are used throughout the generator.
+
+The energy-constrainer network is similar to the critic: three 3D convolutions with kernel sizes `3x3x3`, `3x3x3` and `2x2x2` along with 16, 32, and 16 filters are used. The output is then fed into a fully connected network with 2000, 100, and 1 nodes. LayerNorm layers and LeakyReLU (slope: -0.2) are sandwiched in between convolutional layers.
+
 
 
 ### BIB-AE and Post Processing
-![WGAN](figures/BAE_PP.png)
+![Bib-AE](figures/BAE_PP.png)
 
 
 
