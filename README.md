@@ -69,7 +69,21 @@ Created file `showers-1k.hdf5` has the following structure:
 
 As stated in our paper, we have trained our model on 950k showers, which is approximately 200 Gb. That is why we are able to put only a small fraction of our training data to [[`Zenado`](https://zenodo.org/record/3826103#.Xrz1RBZS-EI)]
  
-## Architerctures
+## Architectures
+
+The network architectures of generative models have a large number of moving parts and the contributions from various generators, discriminators, and critics need to be carefully orchestrated to achieve good results. Due to the high computational cost of the studies, no systematic tuning of hyperparameters was performed.
+
+### GAN
+![GAN](figures/VGAN.png)
+Our implementation of the `vanilla` GAN is a baseline model consisting of a generator and a discriminator. The generator network of the GAN consists of 3-dimen-
+sional transposed convolution layers with batch normalization. It takes a noise vector of length 100, uniformly distributed from -1 to 1, and the true energy labels E as inputs. The discriminator uses five 3-dimensional convolution layers followed by two fully connected layers with 257 and 128 nodes respectively. We flatten the output of the convolutions and concatenate it the with input energy before passing it to the fully connected layers. Each fully connected layer except the final one uses LeakyReLU [59] (slope: −0.2) as an activation function. The activation in the final layer is sigmoid. In total, the generator has 1.5M trainable weights and the discriminator has 2.0M weights. 
+
+### WGAN
+![WGAN](figures/WGAN.png)
+
+
+### BIB-AE and Post Processing
+![WGAN](figures/BAE_PP.png)
 
 
 
