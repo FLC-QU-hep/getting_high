@@ -6,7 +6,7 @@ This repository contains ingredients for repoducing *Getting High: High Fidelity
 ## Data Generation and Preparation 
 
 #### Step 1: ddsim + Geant4
-We use `iLCsoft` which includes `ddsim` and `Geant4`. It is better to use generation code that outputs big files to a scratch space. For DESY and NAF users: you may want to use DUST strogage in **CentOS7** NAF-WGs.
+We use [[`iLCsoft`](https://github.com/iLCSoft)] ecosystem which includes `ddsim` and `Geant4`. It is better to use generation code that outputs big files to a scratch space. For DESY and NAF users: you may want to use DUST strogage in **CentOS7** NAF-WGs.
 
 First we need to pull `ILDConfig` repository and go to its specific folder.
 
@@ -79,9 +79,13 @@ Our implementation of the `vanilla` GAN is a baseline model consisting of a gene
 
 ### WGAN
 ![WGAN](figures/WGAN.png)
-One alternative to classical GAN training is to use the Wasserstein-1 distance, also known as earth mover's distance, as a loss function. The WGAN architecture consists of 3 networks: one generator with 3.7M weights, one critic with 250k weights, and one constrainer network with 220k weights.
+One alternative to classical GAN training is to use the Wasserstein-1 distance, also known as earth mover's distance, as a loss function. The WGAN architecture consists of 3 networks: 
 
-The critic network starts with four 3D convolution layers with kernel sizes ($X$,2,2) with `X=10,6,4,4` which have 32, 64, 128, and 1 filters respectively. LayerNorm layers are sandwiched between the convolutions. After the last convolution, the output is concatenated with the `E` vector required for $E-$conditioning. After that, it is flattened and fed into a fully connected network with 91, 100, 200, 100, 75, 1 nodes. Throughout the critic, LeakyReLU (slope: $-0.2$) is used as activation function.
+* one generator with 3.7M weights, 
+* one critic with 250k weights, 
+* one constrainer network with 220k weights.
+
+The critic network starts with four 3D convolution layers with kernel sizes (X,2,2) with `X=10,6,4,4` which have 32, 64, 128, and 1 filters respectively. LayerNorm layers are sandwiched between the convolutions. After the last convolution, the output is concatenated with the `E` vector required for $E-$conditioning. After that, it is flattened and fed into a fully connected network with 91, 100, 200, 100, 75, 1 nodes. Throughout the critic, LeakyReLU (slope: -0.2) is used as activation function.
 
 The generator network takes a latent vector `z` (normally distributed with length 100) and true `E` labels as input and separately passes them through a 3D transposed convolution layer using a `4x4x4` kernels with 128 filters. After that, the outputs are concatenated and processed through a series of four 3D transposed convolution layers (kernel size `4x4x4` with filters of 256, 128, 64, 32).  LayerNorm layers along with ReLU activation functions are used throughout the generator.
 
