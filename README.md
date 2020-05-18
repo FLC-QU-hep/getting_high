@@ -11,7 +11,7 @@ We use `iLCsoft` which includes `ddsim` and `Geant4`. It is better to use genera
 First we need to pull `ILDConfig` repository and go to its specific folder.
 
 ```
-git clone --branch v02-01-pre02 vhttps://github.com/iLCSoft/ILDConfig.git
+git clone --branch v02-01-pre02 https://github.com/iLCSoft/ILDConfig.git
 cd ILDConfig/StandardConfig/production
 ```
 copy all `.py`, `.sh` and `create_root_tree.xml` files to this folder from `training_data` folder. 
@@ -91,7 +91,14 @@ The energy-constrainer network is similar to the critic: three 3D convolutions w
 
 ### BIB-AE and Post Processing
 ![Bib-AE](figures/BAE_PP.png)
-An instructive way for describing the base BIB-AE framework is by taking a VAE and expanding upon it. A default VAE consist of four general components: an encoder, a decoder, a latent-space regularized by the Kullback--Leibler divergence (KLD), and an L<sub>N</sub>-norm to determine the difference between the original and the reconstructed data. These components are all present as well in the BIB-AE setup. Additionally, one introduces a GAN-like adversarial network, trained to distinguish between real and reconstructed data, as well as a sampling based method of regularizing the latent space, such as another adversarial network or a maximum mean discrepancy (MMD, as described in the next section) term. In total this adds up to four loss terms: The KLD on the latent space, the sampling regularization on the latent space, the L<sub>N</sub> norm on the reconstructed samples and the adversary on the reconstructed samples. The guiding principle behind this is that the two latent space and the two reconstruction losses complement each other and, in combination, allow the network to learn a more detailed description of the data.
+An instructive way for describing the base BIB-AE framework is by taking a VAE and expanding upon it. A default VAE consist of four general components: 
+
+*  encoder, 
+*  decoder, 
+*  latent-space regularized by the Kullback--Leibler divergence (KLD), 
+*  an L<sub>N</sub>-norm to determine the difference between the original and the reconstructed data. 
+
+These components are all present as well in the BIB-AE setup. Additionally, one introduces a GAN-like adversarial network, trained to distinguish between real and reconstructed data, as well as a sampling based method of regularizing the latent space, such as another adversarial network or a maximum mean discrepancy (MMD, as described in the next section) term. In total this adds up to four loss terms: The KLD on the latent space, the sampling regularization on the latent space, the L<sub>N</sub> norm on the reconstructed samples and the adversary on the reconstructed samples. The guiding principle behind this is that the two latent space and the two reconstruction losses complement each other and, in combination, allow the network to learn a more detailed description of the data.
 
 Please refer to our paper *Appendix A.3* a more detailed description of BiB-AE and Post Processing network architectures. 
 
@@ -138,7 +145,7 @@ With this option, you are able to run WGAN model across distributed GPUs (i.e GP
 ```bash
 #!/bin/bash
 
-#SBATCH --partition=
+#SBATCH --partition=your-partition
 #SBATCH --nodes=3                                 # Number of nodes
 #SBATCH --time=24:00:00     
 #SBATCH --constraint="V100"
