@@ -30,7 +30,7 @@
 
  <processor name="MyAIDAProcessor" type="AIDAProcessor">
   <parameter name="FileName" type="string">
-      test20k
+      wgan
   </parameter>
   <parameter name="FileType" type="string">root </parameter>
  </processor>
