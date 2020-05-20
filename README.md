@@ -1,25 +1,20 @@
 # Generative Models for High-granularity Calorimeter of ILD
 We are modelling electromagnetic showers in the central region of the Silicon-Tungsten calorimeter of the proposed ILD. We investigate the use of a new architecture: Bounded-Information Bottleneck Autoencoder. In addition, we are utilising WGAN-GP and vanilla GAN approaches. In total, we train 3 generative models. 
 
-This repository contains ingredients for repoducing *Getting High: High Fidelity Simulation of High Granularity Calorimeters with High Speed* [[`arXiv:2005.05334`](https://arxiv.org/abs/2005.05334)]
+This repository contains ingredients for repoducing *Getting High: High Fidelity Simulation of High Granularity Calorimeters with High Speed* [[`arXiv:2005.05334`](https://arxiv.org/abs/2005.05334)]. A small fraction of the training data is available in [`Zenodo`](https://zenodo.org/record/3826103#.Xrz1RBZS-EI).
 
 ## Outline:
 
 * [Data Generation and Preparation](#Data-Generation-and-Preparation)
 * [Architectures](#Architectures)
-    - [GAN](#GAN)
-    - [WGAN](#WGAN)
-    - [BIB-AE and Post Processing](#BIB-AE-and-Post-Processing)
 * [Training](#Training)
-    - [Bib-AE](#Bib-AE)
-    - [WGAN](#WGAN)
-    - [GAN](#GAN)
-    
+
+
 
 ## Data Generation and Preparation 
 
 #### Step 1: ddsim + Geant4
-We use [[`iLCsoft`](https://github.com/iLCSoft)] ecosystem which includes `ddsim` and `Geant4`. It is better to use generation code that outputs big files to a scratch space. For DESY and NAF users: you may want to use DUST strogage in **CentOS7** NAF-WGs.
+We use [`iLCsoft`](https://github.com/iLCSoft) ecosystem which includes `ddsim` and `Geant4`. It is better to use generation code that outputs big files to a scratch space. For DESY and NAF users: you may want to use DUST strogage in **CentOS7** NAF-WGs.
 
 First we need to pull `ILDConfig` repository and go to its specific folder.
 
@@ -80,7 +75,7 @@ Created file `showers-1k.hdf5` has the following structure:
      * `energy`               : Dataset {1000, 1}
      * `layers`               : Dataset {1000, 30,30,30}
 
-As stated in our paper, we have trained our model on 950k showers, which is approximately 200 Gb. That is why we are able to put only a small fraction of our training data to [[`Zenado`](https://zenodo.org/record/3826103#.Xrz1RBZS-EI)]
+As stated in our paper, we have trained our model on 950k showers, which is approximately 200 Gb. That is why we are able to put only a small fraction of our training data to [[`Zenodo`](https://zenodo.org/record/3826103#.Xrz1RBZS-EI)]
  
 ## Architectures
 
@@ -98,7 +93,7 @@ One alternative to classical GAN training is to use the Wasserstein-1 distance, 
 * one critic with 250k weights, 
 * one constrainer network with 220k weights.
 
-The critic network starts with four 3D convolution layers with kernel sizes (X,2,2) with `X=10,6,4,4` which have 32, 64, 128, and 1 filters respectively. LayerNorm layers are sandwiched between the convolutions. After the last convolution, the output is concatenated with the `E` vector required for $E-$conditioning. After that, it is flattened and fed into a fully connected network with 91, 100, 200, 100, 75, 1 nodes. Throughout the critic, LeakyReLU (slope: -0.2) is used as activation function.
+The critic network starts with four 3D convolution layers with kernel sizes (X,2,2) with `X=10,6,4,4` which have 32, 64, 128, and 1 filters respectively. LayerNorm layers are sandwiched between the convolutions. After the last convolution, the output is concatenated with the `E` vector required for energy-conditioning. After that, it is flattened and fed into a fully connected network with 91, 100, 200, 100, 75, 1 nodes. Throughout the critic, LeakyReLU (slope: -0.2) is used as activation function.
 
 The generator network takes a latent vector `z` (normally distributed with length 100) and true `E` labels as input and separately passes them through a 3D transposed convolution layer using a `4x4x4` kernels with 128 filters. After that, the outputs are concatenated and processed through a series of four 3D transposed convolution layers (kernel size `4x4x4` with filters of 256, 128, 64, 32).  LayerNorm layers along with ReLU activation functions are used throughout the generator.
 
@@ -122,7 +117,7 @@ Please refer to our paper *Appendix A.3* a more detailed description of BiB-AE a
 
 ## Training
 
-In order to train our generative models, please make sure you downloaded `hdf5` file from Zenado and put it into `training_data` folder. Alternatively, you can contact authors and ask for more data or you could generate yourself by following instructions above. 
+In order to train our generative models, please make sure you downloaded `hdf5` file from Zenodo and put it into `training_data` folder. Alternatively, you can contact authors and ask for more data or you could generate yourself by following instructions above. 
 
 ### Bib-AE
 
@@ -198,4 +193,4 @@ singularity run --nv docker://engineren/pytorch:latest python GAN/main_GAN.py
 
 ```
 
-If you wish to recover from a saved model (i.e checkpoin), run the same command with an argument `from_chp`. 
+If you wish to recover from a saved model (i.e checkpoint), run the same command with an argument `from_chp`. 
