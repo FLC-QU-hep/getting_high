@@ -7,9 +7,14 @@ This repository contains ingredients for repoducing *Getting High: High Fidelity
 
 * [Data Generation and Preparation](#Data-Generation-and-Preparation)
 * [Architectures](#Architectures)
+    - [GAN](#GAN)
+    - [WGAN](#WGAN)
+    - [BIB-AE and Post Processing](#BIB-AE-and-Post-Processing)
 * [Training](#Training)
-
-
+    - [Bib-AE](#Bib-AE)
+    - [WGAN](#WGAN)
+    - [GAN](#GAN)
+    
 
 ## Data Generation and Preparation 
 
