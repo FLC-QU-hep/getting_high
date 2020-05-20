@@ -67,7 +67,7 @@
    <!--Names of all input collections-->
    <parameter name="InputCollections" type="StringVec"> 
      ECalBarrelSiHitsOdd
-     ECalBarrelSiHitsEven ECalEndcapSiHitsOdd ECalEndcapSiHitsEven
+     ECalBarrelSiHitsEven ECalEndcapSiHitsOdd ECalEndcapSiHitsEven 
    </parameter>
   <!--Optional IDs for input collections - if given id will be added to all objects in merged collections as ext<CollID>()-->
    <parameter name="InputCollectionIDs" type="IntVec">

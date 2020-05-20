@@ -4,3 +4,4 @@ training_data/lcio/*.json
 output/*
 runs/*
 WGAN/models/__pycache__/*
+GAN/models/__pycache__/*

@@ -47,22 +47,21 @@ for j in range( 0, nevt ):
         evt.addCollection( col , "SimCalorimeterHit" )
 
         
-        sch = IMPL.SimCalorimeterHitImpl()
         ### get from json file, loop over 27k cells
         for i in range(0,27000):
+            sch = IMPL.SimCalorimeterHitImpl()
             energy = data[i]['e']
             x = data[i]['x']
             y = data[i]['y']
             z = data[i]['z']
             position = array('f',[x,y,z])
             #print x,y,z,energy
-            sch.setPosition(position)
-            sch.setEnergy(energy)
-            
+            if energy != 0.0:
+                sch.setPosition(position)
+                sch.setEnergy(energy)
+                col.addElement( sch )
 
 
-        ### create SimCalorimeterHit
-        col.addElement( sch )
         wrt.writeEvent( evt ) 
 
 

@@ -3,6 +3,14 @@ We are modelling electromagnetic showers in the central region of the Silicon-Tu
 
 This repository contains ingredients for repoducing *Getting High: High Fidelity Simulation of High Granularity Calorimeters with High Speed* [[`arXiv:2005.05334`](https://arxiv.org/abs/2005.05334)]
 
+## Outline:
+
+* [Data Generation and Preparation](#Data-Generation-and-Preparation)
+* [Architectures](#Architectures)
+* [Training](#Training)
+
+
+
 ## Data Generation and Preparation 
 
 #### Step 1: ddsim + Geant4
@@ -175,3 +183,14 @@ srun -N 3 singularity run --nv docker://engineren/pytorch:latest python WGAN/wGA
 
 
 ```
+
+### GAN
+
+The training GAN model exclusively on a single GPU is possible via singularity. You might want to adjust `batch_size` in the `main()` function so that data fits into your GPU's memory.
+
+```bash
+singularity run --nv docker://engineren/pytorch:latest python GAN/main_GAN.py
+
+```
+
+If you wish to recover from a saved model (i.e checkpoin), run the same command with an argument `from_chp`. 

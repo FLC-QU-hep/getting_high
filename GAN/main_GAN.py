@@ -27,8 +27,8 @@ FloatTensor = torch.cuda.FloatTensor if cuda else torch.FloatTensor
 device = torch.device("cuda:0" if (torch.cuda.is_available() and ngpu > 0) else "cpu")
 
 
-PATH_save = '/home/akorol/projects/GenerateCalice/VGAN/trained_models/conv_3d/conv3d_corr_new2.pth'
-PATH_chechpoint = '/home/akorol/projects/GenerateCalice/VGAN/trained_models/new2_1.pth'
+PATH_save = '/*path*-to-saved-model/conv3d_corr_new2.pth'
+PATH_chechpoint = '/*path*-to-saved-model/new2_1.pth'
 
 def save(netG, netD, omtim_G, optim_D, epoch, loss, scores, path_to_save):
     torch.save({
@@ -100,7 +100,7 @@ netD.train()
 
 
 print('Loading data...')
-path = '/beegfs/desy/user/eren/improved-wgan-pytorch/data/800kCorr.hdf5'
+path = 'training_data/50k.hdf5'
 data = H.HDF5Dataset(path, '30x30')
 dataloader = torch.utils.data.DataLoader(data, batch_size=batch_size,
                                          shuffle=True, num_workers=workers)
