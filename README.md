@@ -22,7 +22,7 @@ First we need to pull `ILDConfig` repository and go to its specific folder.
 git clone --branch v02-01-pre02 https://github.com/iLCSoft/ILDConfig.git
 cd ILDConfig/StandardConfig/production
 ```
-copy all `.py`, `.sh` and `create_root_tree.xml` files to this folder from `training_data` folder. 
+copy all `.py`, `.sh` , `create_root_tree.xml` and `gammaGun.mac` files to this folder from `training_data` folder. 
 
 
 We use `singularity` (with `docker` image) to generate Geant4 showers. Please export necessary singularity **tmp** and **cache** for convenience. 
