@@ -1,3 +1,5 @@
+from comet_ml import Experiment
+
 
 import torch
 import sys
@@ -8,9 +10,19 @@ import torch.optim as optim
 import torch.utils.data
 from torch.autograd.variable import Variable
 import models.HDF5Dataset as H
-import models.GAN as GAN
+import models.GAN_MBD as GAN
 from apex import amp
 import time
+
+
+# Create an experiment with your api key:
+experiment = Experiment(
+    api_key="XHlubEGsua6IiOJRE79h0lYH0",
+    project_name="ph_gan",
+    workspace="akorol",
+)
+
+
 
 # Constants
 manualSeed = 2517
@@ -18,7 +30,7 @@ print("Random Seed: ", manualSeed)
 np.random.seed(manualSeed)
 torch.manual_seed(manualSeed)
 workers = 40
-batch_size = 32
+batch_size = 64
 nz = 100
 num_epochs = 50
 lr = 0.00001
@@ -29,8 +41,20 @@ FloatTensor = torch.cuda.FloatTensor if cuda else torch.FloatTensor
 device = torch.device("cuda:0" if (torch.cuda.is_available() and ngpu > 0) else "cpu")
 
 
-PATH_save = '/home/akorol/projects/GenerateCalice/VGAN/trained_models/conv_3d/conv3d_mixed_precision_{}.pth'
-PATH_chechpoint = '/home/akorol/projects/GenerateCalice/VGAN/trained_models/new2_1.pth'
+hyper_params = {
+    'manualSeed': manualSeed,
+    'learning_rate': lr,
+    'steps': num_epochs,
+    'beta1': beta1,
+    'batch_size': batch_size,
+    'latent_dim': nz,
+    "batch_size": batch_size,
+}
+experiment.log_parameters(hyper_params)
+
+
+PATH_save = '/beegfs/desy/user/akorol/trained_models/photon_gan/GAN_with_MBD_54_SGD_{}.pth'
+PATH_chechpoint = '/beegfs/desy/user/akorol/trained_models/photon_gan/GAN_with_MBD_54_SGD_62.pth'
 
 def save(netG, netD, omtim_G, optim_D, epoch, loss, scores, path_to_save):
     torch.save({
@@ -56,8 +80,12 @@ netG.apply(GAN.weights_init)
 criterion = nn.BCEWithLogitsLoss()
 
 # Optimizers
-optimizer_G = torch.optim.Adam(netG.parameters(), lr=lr, betas=(beta1, 0.999))
+# optimizer_G = torch.optim.Adam(netG.parameters(), lr=lr, betas=(beta1, 0.999))
 optimizer_D = torch.optim.Adam(netD.parameters(), lr=lr, betas=(beta1, 0.999))
+
+optimizer_G = torch.optim.SGD(netG.parameters(), lr=lr, momentum=0.9)
+# optimizer_D = torch.optim.SGD(netD.parameters(), lr=lr, momentum=0.9)
+
 
 
 if len(sys.argv) > 1:
@@ -126,6 +154,7 @@ print('Done!\n')
 
 print('Start training loop...')
 
+step = 0
 for epoch in range(num_epochs):
     epoch += eph + 1
     netG.train()
@@ -152,7 +181,7 @@ for epoch in range(num_epochs):
 #         errD_real.backward()
         
         
-        noise = torch.FloatTensor(btch_sz, 100, 1, 1, 1).uniform_(-1, 1)
+        noise = torch.FloatTensor(btch_sz, nz, 1, 1, 1).uniform_(-1, 1)
 
         gen_labels = np.random.uniform(10, 100, btch_sz)
         gen_labels = Variable(FloatTensor(gen_labels))
@@ -187,19 +216,19 @@ for epoch in range(num_epochs):
             scaled_loss.backward()
         optimizer_G.step()
 
-        # Output training stats
-        G_losses = np.append(G_losses, errG.item())
-        D_losses = np.append(D_losses, errD.item())
-        D_scores_x = np.append(D_scores_x, D_x)
-        D_scores_z1 = np.append(D_scores_z1, D_G_z1)
-        D_scores_z2 = np.append(D_scores_z2, D_G_z2)
-        
-        calculation_time += time.time() - calc_time
-        if i % 1000 == 0:
+        # Output training stats        
+        if i % 100 == 0:
+            calculation_time += time.time() - calc_time
+            experiment.log_metric("G_losses", errG.item(), step=step)
+            experiment.log_metric("D_losses", errD.item(), step=step)
+            experiment.log_metric("D_scores_real", D_x, step=step)
+            experiment.log_metric("D_scores_fake", D_G_z1, step=step)
+            step+=1
             print('[%d/%d] [%d/%d], (Loss_D: %.4f)  (Loss_G: %.4f),  (D(x): %.4f)  (D(G(z)): %.4f / %.4f) (calc_time: %.4f)'
                   % (epoch, num_epochs, i, len(dataloader),
                      errD.item(), errG.item(), D_x, D_G_z1, D_G_z2, calculation_time))
             calculation_time = 0
+            
 
     loss =  np.array([G_losses, D_losses])
     D_scores = np.array([D_scores_x, D_scores_z1, D_scores_z2])
