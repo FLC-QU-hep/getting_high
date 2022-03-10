@@ -69,7 +69,7 @@ def correction(hdf5File, pname, rname):
                     image='engineren/pytorch:latest',
                     command=[ '/bin/bash', '-c'],
                     arguments=['git clone --branch kf_pipelines https://github.com/FLC-QU-hep/getting_high.git && cd getting_high/kf_pipelines \
-                                cp /secret/krb-secret-vol/krb5cc_1000 /tmp/krb5cc_0 && chmod 600 /tmp/krb5cc_0 \
+                                && cp /secret/krb-secret-vol/krb5cc_1000 /tmp/krb5cc_0 && chmod 600 /tmp/krb5cc_0 \
                                 && python correctionsEOS.py --input $0 --outputR "$1" --outputP "$2" --batchsize 100 --minibatch 10', hdf5File, rname, pname]
             
     ).add_volume(eos_volume).add_volume_mount(eos_volume_mount).add_volume(krb_secret_volume).add_volume_mount(krb_secret_volume_mount)   

@@ -6,7 +6,7 @@ import logging
 import os, sys
 import argparse
 import multiprocessing as mp
-import models.HDF5Dataset as H
+import HDF5Dataset as H
 import torch
 
 def correct2D(dpath, BATCH_SIZE, minibatch):
