@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
   generateName: ildeventgen-getting-high-
-  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.9, pipelines.kubeflow.org/pipeline_compilation_time: '2022-03-10T10:58:08.487211',
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.9, pipelines.kubeflow.org/pipeline_compilation_time: '2022-03-10T11:06:54.899571',
     pipelines.kubeflow.org/pipeline_spec: '{"description": "Event Simulation and Reconstruction",
       "name": "ILDEventGen_Getting_high"}'}
   labels: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.9}
@@ -131,7 +131,7 @@ spec:
           && cd getting_high/kf_pipelines                                 && cp /secret/krb-secret-vol/krb5cc_1000
           /tmp/krb5cc_0 && chmod 600 /tmp/krb5cc_0                                 &&
           python correctionsEOS.py --input $0 --outputR "$1" --outputP "$2" --batchsize
-          100 --minibatch 10', /tmp/inputs/input-0/data, getting_high_10GeV, '1']
+          10 --minibatch 100', /tmp/inputs/input-0/data, getting_high_10GeV, '1']
       command: [/bin/bash, -c]
       image: engineren/pytorch:latest
       volumeMounts:
@@ -156,7 +156,7 @@ spec:
           && cd getting_high/kf_pipelines                                 && cp /secret/krb-secret-vol/krb5cc_1000
           /tmp/krb5cc_0 && chmod 600 /tmp/krb5cc_0                                 &&
           python correctionsEOS.py --input $0 --outputR "$1" --outputP "$2" --batchsize
-          100 --minibatch 10', /tmp/inputs/input-0/data, getting_high_10GeV, '2']
+          10 --minibatch 100', /tmp/inputs/input-0/data, getting_high_10GeV, '2']
       command: [/bin/bash, -c]
       image: engineren/pytorch:latest
       volumeMounts:
@@ -181,7 +181,7 @@ spec:
           && cd getting_high/kf_pipelines                                 && cp /secret/krb-secret-vol/krb5cc_1000
           /tmp/krb5cc_0 && chmod 600 /tmp/krb5cc_0                                 &&
           python correctionsEOS.py --input $0 --outputR "$1" --outputP "$2" --batchsize
-          100 --minibatch 10', /tmp/inputs/input-0/data, getting_high_10GeV, '3']
+          10 --minibatch 100', /tmp/inputs/input-0/data, getting_high_10GeV, '3']
       command: [/bin/bash, -c]
       image: engineren/pytorch:latest
       volumeMounts:
@@ -206,7 +206,7 @@ spec:
           && cd getting_high/kf_pipelines                                 && cp /secret/krb-secret-vol/krb5cc_1000
           /tmp/krb5cc_0 && chmod 600 /tmp/krb5cc_0                                 &&
           python correctionsEOS.py --input $0 --outputR "$1" --outputP "$2" --batchsize
-          100 --minibatch 10', /tmp/inputs/input-0/data, getting_high_10GeV, '4']
+          10 --minibatch 100', /tmp/inputs/input-0/data, getting_high_10GeV, '4']
       command: [/bin/bash, -c]
       image: engineren/pytorch:latest
       volumeMounts:
