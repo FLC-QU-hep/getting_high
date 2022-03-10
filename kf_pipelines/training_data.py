@@ -39,8 +39,7 @@ def sim(pname, rname):
                                 cp /secret/krb-secret-vol/krb5cc_1000 /tmp/krb5cc_0 && \
                                 chmod 600 /tmp/krb5cc_0 && \
                                 cd $PWD/ILDConfig/StandardConfig/production && \
-                                cp /home/getting_high/training_data/*.py . && cp /home/getting_high/training_data/*.sh . && \
-                                cp /home/getting_high/training_data/create_root_tree.xml . && cp /home/getting_high/training_data/*.mac . && \
+                                cp /home/getting_high/kf_pipelines/* . && \
                                 chmod +x ./generateG4EOS.sh && ./generateG4EOS.sh "$0" "$1" ', pname, rname],
                     file_outputs={
                         'metadata': '/mnt/root_path'

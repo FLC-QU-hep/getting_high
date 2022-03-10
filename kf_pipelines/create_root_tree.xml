@@ -1,0 +1,82 @@
+
+<?xml version="1.0" encoding="us-ascii"?>
+<!-- ?xml-stylesheet type="text/xsl" href="http://ilcsoft.desy.de/marlin/marlin.xsl"? -->
+<!-- ?xml-stylesheet type="text/xsl" href="marlin.xsl"? -->
+
+<!-- Loading shared library : /Users/fgaede/marlin/mymarlin/lib/libmymarlin.0.1.0.dylib (libmymarlin.dylib)-->
+
+<!--##########################################
+    #                                        #
+    #     Example steering file for marlin   #
+    #                                        #
+    ##########################################-->
+
+
+<marlin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ilcsoft.desy.de/marlin/marlin.xsd">
+ <execute>
+  <processor name="MyAIDAProcessor"/>
+  <processor name="MergeSimCaloHits" />
+  <processor name="photonSIM"/>  
+ </execute>
+
+ <global>
+  <parameter name="LCIOInputFiles">  </parameter>
+  <parameter name="MaxRecordNumber" value="0" />  
+  <parameter name="SkipNEvents" value="0"/>  
+  <parameter name="SupressCheck" value="false" />  
+  <parameter name="Verbosity" options="DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT">MESSAGE DEBUG  </parameter> 
+  <parameter name="RandomSeed" value="1234567890" />
+ </global>
+
+ <processor name="MyAIDAProcessor" type="AIDAProcessor">
+  <parameter name="FileName" type="string">
+      wgan
+  </parameter>
+  <parameter name="FileType" type="string">root </parameter>
+ </processor>
+
+ <processor name="photonSIM" type="LCTuple">
+ <!--LCTuple creates a ROOT TTRee with a column wise ntuple from LCIO collections ....-->
+  
+  <!--Name of the MCParticle collection-->
+  <parameter name="MCParticleCollection" type="string" lcioInType="MCParticle">MCParticle</parameter>
+
+  <!--Name the ReconstructedParticle collection-->
+  <parameter name="RecoParticleCollection" type="string" lcioInType="ReconstructedParticle"></parameter>
+
+  <!--Name of the Track collection-->
+  <parameter name="TrackCollection" type="string" lcioInType="LDCTracks"></parameter>
+
+  <!--Name of the SimTrackerHit collection-->
+  <parameter name="SimTrackerHitCollection" type="string" lcioInType="SimTrackerHit"></parameter>
+
+  <!--Name of the SimCalorimeterHit collection-->
+  <parameter name="SimCalorimeterHitCollection" type="string" lcioInType="SimCalorimeterHit"> SimCalorimeterHits </parameter>
+
+  <!--Names of LCRelation collections - need parallel prefix names in RelPrefixes-->
+  <parameter name="LCRelationCollections" type="StringVec" lcioInType="LCRelation">  </parameter>
+  <!-- Names of prefixes for variables from LCRelation collections - needs to be parallel to LCRelationCollections (one prefix per collection)-->
+  <parameter name="LCRelationPrefixes" type="StringVec">   </parameter>
+
+  <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
+  <parameter name="Verbosity" type="string">DEBUG </parameter>
+</processor>
+
+ <processor name="MergeSimCaloHits" type="MergeCollections">
+   <!--MergeCollections creates a transient subset collection that merges all input collections -->
+   <!--Names of all input collections-->
+   <parameter name="InputCollections" type="StringVec"> 
+     ECalBarrelSiHitsOdd
+     ECalBarrelSiHitsEven ECalEndcapSiHitsOdd ECalEndcapSiHitsEven 
+   </parameter>
+  <!--Optional IDs for input collections - if given id will be added to all objects in merged collections as ext<CollID>()-->
+   <parameter name="InputCollectionIDs" type="IntVec">
+     1 2 3 4
+   </parameter>
+   <parameter name="OutputCollection" type="string">SimCalorimeterHits </parameter>
+   <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
+   <parameter name="Verbosity" type="string">DEBUG </parameter>
+ </processor>
+ 
+
+</marlin>
