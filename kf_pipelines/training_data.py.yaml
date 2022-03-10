@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
   generateName: ildeventgen-getting-high-
-  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.9, pipelines.kubeflow.org/pipeline_compilation_time: '2022-03-10T11:06:54.899571',
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.9, pipelines.kubeflow.org/pipeline_compilation_time: '2022-03-10T13:53:38.063409',
     pipelines.kubeflow.org/pipeline_spec: '{"description": "Event Simulation and Reconstruction",
       "name": "ILDEventGen_Getting_high"}'}
   labels: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.9}
@@ -15,7 +15,7 @@ spec:
           && cd getting_high/kf_pipelines                                 && cp /secret/krb-secret-vol/krb5cc_1000
           /tmp/krb5cc_0 && chmod 600 /tmp/krb5cc_0                                 &&
           python create_hdf5EOS.py --ncpu 4 --rootfile "$0" --outputR "$1" --outputP
-          "$2" --branch photonSIM --batchsize 100', /tmp/inputs/input-0/data, getting_high_10GeV,
+          "$2" --branch photonSIM --batchsize 100', /tmp/inputs/input-0/data, getting_high_90GeV,
         '1']
       command: [/bin/bash, -c]
       image: engineren/pytorch:latest
@@ -44,7 +44,7 @@ spec:
           && cd getting_high/kf_pipelines                                 && cp /secret/krb-secret-vol/krb5cc_1000
           /tmp/krb5cc_0 && chmod 600 /tmp/krb5cc_0                                 &&
           python create_hdf5EOS.py --ncpu 4 --rootfile "$0" --outputR "$1" --outputP
-          "$2" --branch photonSIM --batchsize 100', /tmp/inputs/input-0/data, getting_high_10GeV,
+          "$2" --branch photonSIM --batchsize 100', /tmp/inputs/input-0/data, getting_high_90GeV,
         '2']
       command: [/bin/bash, -c]
       image: engineren/pytorch:latest
@@ -73,7 +73,7 @@ spec:
           && cd getting_high/kf_pipelines                                 && cp /secret/krb-secret-vol/krb5cc_1000
           /tmp/krb5cc_0 && chmod 600 /tmp/krb5cc_0                                 &&
           python create_hdf5EOS.py --ncpu 4 --rootfile "$0" --outputR "$1" --outputP
-          "$2" --branch photonSIM --batchsize 100', /tmp/inputs/input-0/data, getting_high_10GeV,
+          "$2" --branch photonSIM --batchsize 100', /tmp/inputs/input-0/data, getting_high_90GeV,
         '3']
       command: [/bin/bash, -c]
       image: engineren/pytorch:latest
@@ -102,7 +102,7 @@ spec:
           && cd getting_high/kf_pipelines                                 && cp /secret/krb-secret-vol/krb5cc_1000
           /tmp/krb5cc_0 && chmod 600 /tmp/krb5cc_0                                 &&
           python create_hdf5EOS.py --ncpu 4 --rootfile "$0" --outputR "$1" --outputP
-          "$2" --branch photonSIM --batchsize 100', /tmp/inputs/input-0/data, getting_high_10GeV,
+          "$2" --branch photonSIM --batchsize 100', /tmp/inputs/input-0/data, getting_high_90GeV,
         '4']
       command: [/bin/bash, -c]
       image: engineren/pytorch:latest
@@ -131,7 +131,7 @@ spec:
           && cd getting_high/kf_pipelines                                 && cp /secret/krb-secret-vol/krb5cc_1000
           /tmp/krb5cc_0 && chmod 600 /tmp/krb5cc_0                                 &&
           python correctionsEOS.py --input $0 --outputR "$1" --outputP "$2" --batchsize
-          10 --minibatch 100', /tmp/inputs/input-0/data, getting_high_10GeV, '1']
+          10 --minibatch 100', /tmp/inputs/input-0/data, getting_high_90GeV, '1']
       command: [/bin/bash, -c]
       image: engineren/pytorch:latest
       volumeMounts:
@@ -156,7 +156,7 @@ spec:
           && cd getting_high/kf_pipelines                                 && cp /secret/krb-secret-vol/krb5cc_1000
           /tmp/krb5cc_0 && chmod 600 /tmp/krb5cc_0                                 &&
           python correctionsEOS.py --input $0 --outputR "$1" --outputP "$2" --batchsize
-          10 --minibatch 100', /tmp/inputs/input-0/data, getting_high_10GeV, '2']
+          10 --minibatch 100', /tmp/inputs/input-0/data, getting_high_90GeV, '2']
       command: [/bin/bash, -c]
       image: engineren/pytorch:latest
       volumeMounts:
@@ -181,7 +181,7 @@ spec:
           && cd getting_high/kf_pipelines                                 && cp /secret/krb-secret-vol/krb5cc_1000
           /tmp/krb5cc_0 && chmod 600 /tmp/krb5cc_0                                 &&
           python correctionsEOS.py --input $0 --outputR "$1" --outputP "$2" --batchsize
-          10 --minibatch 100', /tmp/inputs/input-0/data, getting_high_10GeV, '3']
+          10 --minibatch 100', /tmp/inputs/input-0/data, getting_high_90GeV, '3']
       command: [/bin/bash, -c]
       image: engineren/pytorch:latest
       volumeMounts:
@@ -206,7 +206,7 @@ spec:
           && cd getting_high/kf_pipelines                                 && cp /secret/krb-secret-vol/krb5cc_1000
           /tmp/krb5cc_0 && chmod 600 /tmp/krb5cc_0                                 &&
           python correctionsEOS.py --input $0 --outputR "$1" --outputP "$2" --batchsize
-          10 --minibatch 100', /tmp/inputs/input-0/data, getting_high_10GeV, '4']
+          10 --minibatch 100', /tmp/inputs/input-0/data, getting_high_90GeV, '4']
       command: [/bin/bash, -c]
       image: engineren/pytorch:latest
       volumeMounts:
@@ -289,7 +289,7 @@ spec:
           &&                                 cd $PWD/ILDConfig/StandardConfig/production
           &&                                 cp /home/getting_high/kf_pipelines/*
           . &&                                 chmod +x ./generateG4EOS.sh && ./generateG4EOS.sh
-          "$0" "$1" ', '1', getting_high_10GeV]
+          "$0" "$1" ', '1', getting_high_90GeV]
       command: [/bin/bash, -c]
       image: ilcsoft/ilcsoft-centos7-gcc8.2:v02-01-pre
       volumeMounts:
@@ -317,7 +317,7 @@ spec:
           &&                                 cd $PWD/ILDConfig/StandardConfig/production
           &&                                 cp /home/getting_high/kf_pipelines/*
           . &&                                 chmod +x ./generateG4EOS.sh && ./generateG4EOS.sh
-          "$0" "$1" ', '2', getting_high_10GeV]
+          "$0" "$1" ', '2', getting_high_90GeV]
       command: [/bin/bash, -c]
       image: ilcsoft/ilcsoft-centos7-gcc8.2:v02-01-pre
       volumeMounts:
@@ -345,7 +345,7 @@ spec:
           &&                                 cd $PWD/ILDConfig/StandardConfig/production
           &&                                 cp /home/getting_high/kf_pipelines/*
           . &&                                 chmod +x ./generateG4EOS.sh && ./generateG4EOS.sh
-          "$0" "$1" ', '3', getting_high_10GeV]
+          "$0" "$1" ', '3', getting_high_90GeV]
       command: [/bin/bash, -c]
       image: ilcsoft/ilcsoft-centos7-gcc8.2:v02-01-pre
       volumeMounts:
@@ -373,7 +373,7 @@ spec:
           &&                                 cd $PWD/ILDConfig/StandardConfig/production
           &&                                 cp /home/getting_high/kf_pipelines/*
           . &&                                 chmod +x ./generateG4EOS.sh && ./generateG4EOS.sh
-          "$0" "$1" ', '4', getting_high_10GeV]
+          "$0" "$1" ', '4', getting_high_90GeV]
       command: [/bin/bash, -c]
       image: ilcsoft/ilcsoft-centos7-gcc8.2:v02-01-pre
       volumeMounts:
