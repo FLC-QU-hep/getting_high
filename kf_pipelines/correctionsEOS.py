@@ -20,7 +20,7 @@ def correct2D(dpath, BATCH_SIZE, minibatch):
 
 
     dataloader = torch.utils.data.DataLoader(training_dataset, batch_size=BATCH_SIZE,
-                                            shuffle=True, num_workers=10)
+                                            shuffle=True, num_workers=0)
     dataiter = iter(dataloader)
 
     corr_data = []
