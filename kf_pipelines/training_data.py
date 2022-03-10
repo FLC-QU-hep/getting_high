@@ -36,7 +36,7 @@ def sim(pname, rname):
                     command=[ '/bin/bash', '-c'],
                     arguments=['cd /home && git clone --branch kf_pipelines https://github.com/FLC-QU-hep/getting_high.git && \
                                 git clone --branch v02-01-pre02 https://github.com/iLCSoft/ILDConfig.git && \
-                                cp /secret/krb-secret-vol/krb5cc_1000 /tmp/krb5cc_0 && \
+                                cp /secret/krb-secret-vol/krb5cc_1000 /tmp/krb5cc_0 && ls && \
                                 chmod 600 /tmp/krb5cc_0 && \
                                 cd $PWD/ILDConfig/StandardConfig/production && \
                                 cp /home/getting_high/kf_pipelines/* . && \
@@ -55,7 +55,7 @@ def convert_hdf5(rootFile, pname, rname):
                     image='engineren/pytorch:latest',
                     command=[ '/bin/bash', '-c'],
                     arguments=['git clone --branch kf_pipelines https://github.com/FLC-QU-hep/getting_high.git && cd getting_high/kf_pipelines \
-                                cp /secret/krb-secret-vol/krb5cc_1000 /tmp/krb5cc_0 && chmod 600 /tmp/krb5cc_0 \
+                                && cp /secret/krb-secret-vol/krb5cc_1000 /tmp/krb5cc_0 && chmod 600 /tmp/krb5cc_0 \
                                 && python create_hdf5EOS.py --ncpu 4 --rootfile "$0" --outputR "$1" --outputP "$2" --branch photonSIM --batchsize 100', rootFile, rname, pname],
                     file_outputs={
                         'metadata': '/mnt/h5_path'

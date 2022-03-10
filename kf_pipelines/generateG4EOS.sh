@@ -29,7 +29,7 @@ ddsim \
   --steeringFile ddsim_steer_gun.py   
 
 
-Marlin create_root_tree.xml --global.LCIOInputFiles=$EOS_home/run_$r/photon-shower_$n.slcio --MyAIDAProcessor.FileName=pion-shower_$n;
+Marlin create_root_tree.xml --global.LCIOInputFiles=$EOS_home/run_$r/photon-shower_$n.slcio --MyAIDAProcessor.FileName=$EOS_home/run_$r/pion-shower_$n;
 
 echo $EOS_home/run_$r/photon-shower_$n.root > /mnt/root_path
 
