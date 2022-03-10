@@ -1,0 +1,405 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: ildeventgen-getting-high-
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.9, pipelines.kubeflow.org/pipeline_compilation_time: '2022-03-10T08:44:34.551353',
+    pipelines.kubeflow.org/pipeline_spec: '{"description": "Event Simulation and Reconstruction",
+      "name": "ILDEventGen_Getting_high"}'}
+  labels: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.9}
+spec:
+  entrypoint: ildeventgen-getting-high
+  templates:
+  - name: hdf5-conversion
+    container:
+      args: ['git clone --branch kf_pipelines https://github.com/FLC-QU-hep/getting_high.git
+          && cd getting_high/kf_pipelines                                 cp /secret/krb-secret-vol/krb5cc_1000
+          /tmp/krb5cc_0 && chmod 600 /tmp/krb5cc_0                                 &&
+          python create_hdf5EOS.py --ncpu 4 --rootfile "$0" --outputR "$1" --outputP
+          "$2" --branch photonSIM --batchsize 100', /tmp/inputs/input-0/data, getting_high_10GeV,
+        '1']
+      command: [/bin/bash, -c]
+      image: engineren/pytorch:latest
+      volumeMounts:
+      - {mountPath: /eos, name: eos}
+      - {mountPath: /secret/krb-secret-vol, name: krb-secret-vol}
+    inputs:
+      artifacts:
+      - {name: simulation-metadata, path: /tmp/inputs/input-0/data}
+    outputs:
+      artifacts:
+      - {name: hdf5-conversion-metadata, path: /mnt/h5_path}
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.9
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+    volumes:
+    - hostPath: {path: /var/eos}
+      name: eos
+    - name: krb-secret-vol
+      secret: {secretName: krb-secret}
+  - name: hdf5-conversion-2
+    container:
+      args: ['git clone --branch kf_pipelines https://github.com/FLC-QU-hep/getting_high.git
+          && cd getting_high/kf_pipelines                                 cp /secret/krb-secret-vol/krb5cc_1000
+          /tmp/krb5cc_0 && chmod 600 /tmp/krb5cc_0                                 &&
+          python create_hdf5EOS.py --ncpu 4 --rootfile "$0" --outputR "$1" --outputP
+          "$2" --branch photonSIM --batchsize 100', /tmp/inputs/input-0/data, getting_high_10GeV,
+        '2']
+      command: [/bin/bash, -c]
+      image: engineren/pytorch:latest
+      volumeMounts:
+      - {mountPath: /eos, name: eos}
+      - {mountPath: /secret/krb-secret-vol, name: krb-secret-vol}
+    inputs:
+      artifacts:
+      - {name: simulation-2-metadata, path: /tmp/inputs/input-0/data}
+    outputs:
+      artifacts:
+      - {name: hdf5-conversion-2-metadata, path: /mnt/h5_path}
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.9
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+    volumes:
+    - hostPath: {path: /var/eos}
+      name: eos
+    - name: krb-secret-vol
+      secret: {secretName: krb-secret}
+  - name: hdf5-conversion-3
+    container:
+      args: ['git clone --branch kf_pipelines https://github.com/FLC-QU-hep/getting_high.git
+          && cd getting_high/kf_pipelines                                 cp /secret/krb-secret-vol/krb5cc_1000
+          /tmp/krb5cc_0 && chmod 600 /tmp/krb5cc_0                                 &&
+          python create_hdf5EOS.py --ncpu 4 --rootfile "$0" --outputR "$1" --outputP
+          "$2" --branch photonSIM --batchsize 100', /tmp/inputs/input-0/data, getting_high_10GeV,
+        '3']
+      command: [/bin/bash, -c]
+      image: engineren/pytorch:latest
+      volumeMounts:
+      - {mountPath: /eos, name: eos}
+      - {mountPath: /secret/krb-secret-vol, name: krb-secret-vol}
+    inputs:
+      artifacts:
+      - {name: simulation-3-metadata, path: /tmp/inputs/input-0/data}
+    outputs:
+      artifacts:
+      - {name: hdf5-conversion-3-metadata, path: /mnt/h5_path}
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.9
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+    volumes:
+    - hostPath: {path: /var/eos}
+      name: eos
+    - name: krb-secret-vol
+      secret: {secretName: krb-secret}
+  - name: hdf5-conversion-4
+    container:
+      args: ['git clone --branch kf_pipelines https://github.com/FLC-QU-hep/getting_high.git
+          && cd getting_high/kf_pipelines                                 cp /secret/krb-secret-vol/krb5cc_1000
+          /tmp/krb5cc_0 && chmod 600 /tmp/krb5cc_0                                 &&
+          python create_hdf5EOS.py --ncpu 4 --rootfile "$0" --outputR "$1" --outputP
+          "$2" --branch photonSIM --batchsize 100', /tmp/inputs/input-0/data, getting_high_10GeV,
+        '4']
+      command: [/bin/bash, -c]
+      image: engineren/pytorch:latest
+      volumeMounts:
+      - {mountPath: /eos, name: eos}
+      - {mountPath: /secret/krb-secret-vol, name: krb-secret-vol}
+    inputs:
+      artifacts:
+      - {name: simulation-4-metadata, path: /tmp/inputs/input-0/data}
+    outputs:
+      artifacts:
+      - {name: hdf5-conversion-4-metadata, path: /mnt/h5_path}
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.9
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+    volumes:
+    - hostPath: {path: /var/eos}
+      name: eos
+    - name: krb-secret-vol
+      secret: {secretName: krb-secret}
+  - name: hdf5-correction
+    container:
+      args: ['git clone --branch kf_pipelines https://github.com/FLC-QU-hep/getting_high.git
+          && cd getting_high/kf_pipelines                                 cp /secret/krb-secret-vol/krb5cc_1000
+          /tmp/krb5cc_0 && chmod 600 /tmp/krb5cc_0                                 &&
+          python correctionsEOS.py --input $0 --outputR "$1" --outputP "$2" --batchsize
+          1000 --minibatch 4', /tmp/inputs/input-0/data, getting_high_10GeV, '1']
+      command: [/bin/bash, -c]
+      image: engineren/pytorch:latest
+      volumeMounts:
+      - {mountPath: /eos, name: eos}
+      - {mountPath: /secret/krb-secret-vol, name: krb-secret-vol}
+    inputs:
+      artifacts:
+      - {name: hdf5-conversion-metadata, path: /tmp/inputs/input-0/data}
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.9
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+    volumes:
+    - hostPath: {path: /var/eos}
+      name: eos
+    - name: krb-secret-vol
+      secret: {secretName: krb-secret}
+  - name: hdf5-correction-2
+    container:
+      args: ['git clone --branch kf_pipelines https://github.com/FLC-QU-hep/getting_high.git
+          && cd getting_high/kf_pipelines                                 cp /secret/krb-secret-vol/krb5cc_1000
+          /tmp/krb5cc_0 && chmod 600 /tmp/krb5cc_0                                 &&
+          python correctionsEOS.py --input $0 --outputR "$1" --outputP "$2" --batchsize
+          1000 --minibatch 4', /tmp/inputs/input-0/data, getting_high_10GeV, '2']
+      command: [/bin/bash, -c]
+      image: engineren/pytorch:latest
+      volumeMounts:
+      - {mountPath: /eos, name: eos}
+      - {mountPath: /secret/krb-secret-vol, name: krb-secret-vol}
+    inputs:
+      artifacts:
+      - {name: hdf5-conversion-2-metadata, path: /tmp/inputs/input-0/data}
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.9
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+    volumes:
+    - hostPath: {path: /var/eos}
+      name: eos
+    - name: krb-secret-vol
+      secret: {secretName: krb-secret}
+  - name: hdf5-correction-3
+    container:
+      args: ['git clone --branch kf_pipelines https://github.com/FLC-QU-hep/getting_high.git
+          && cd getting_high/kf_pipelines                                 cp /secret/krb-secret-vol/krb5cc_1000
+          /tmp/krb5cc_0 && chmod 600 /tmp/krb5cc_0                                 &&
+          python correctionsEOS.py --input $0 --outputR "$1" --outputP "$2" --batchsize
+          1000 --minibatch 4', /tmp/inputs/input-0/data, getting_high_10GeV, '3']
+      command: [/bin/bash, -c]
+      image: engineren/pytorch:latest
+      volumeMounts:
+      - {mountPath: /eos, name: eos}
+      - {mountPath: /secret/krb-secret-vol, name: krb-secret-vol}
+    inputs:
+      artifacts:
+      - {name: hdf5-conversion-3-metadata, path: /tmp/inputs/input-0/data}
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.9
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+    volumes:
+    - hostPath: {path: /var/eos}
+      name: eos
+    - name: krb-secret-vol
+      secret: {secretName: krb-secret}
+  - name: hdf5-correction-4
+    container:
+      args: ['git clone --branch kf_pipelines https://github.com/FLC-QU-hep/getting_high.git
+          && cd getting_high/kf_pipelines                                 cp /secret/krb-secret-vol/krb5cc_1000
+          /tmp/krb5cc_0 && chmod 600 /tmp/krb5cc_0                                 &&
+          python correctionsEOS.py --input $0 --outputR "$1" --outputP "$2" --batchsize
+          1000 --minibatch 4', /tmp/inputs/input-0/data, getting_high_10GeV, '4']
+      command: [/bin/bash, -c]
+      image: engineren/pytorch:latest
+      volumeMounts:
+      - {mountPath: /eos, name: eos}
+      - {mountPath: /secret/krb-secret-vol, name: krb-secret-vol}
+    inputs:
+      artifacts:
+      - {name: hdf5-conversion-4-metadata, path: /tmp/inputs/input-0/data}
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.9
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+    volumes:
+    - hostPath: {path: /var/eos}
+      name: eos
+    - name: krb-secret-vol
+      secret: {secretName: krb-secret}
+  - name: ildeventgen-getting-high
+    dag:
+      tasks:
+      - name: hdf5-conversion
+        template: hdf5-conversion
+        dependencies: [simulation]
+        arguments:
+          artifacts:
+          - {name: simulation-metadata, from: '{{tasks.simulation.outputs.artifacts.simulation-metadata}}'}
+      - name: hdf5-conversion-2
+        template: hdf5-conversion-2
+        dependencies: [simulation-2]
+        arguments:
+          artifacts:
+          - {name: simulation-2-metadata, from: '{{tasks.simulation-2.outputs.artifacts.simulation-2-metadata}}'}
+      - name: hdf5-conversion-3
+        template: hdf5-conversion-3
+        dependencies: [simulation-3]
+        arguments:
+          artifacts:
+          - {name: simulation-3-metadata, from: '{{tasks.simulation-3.outputs.artifacts.simulation-3-metadata}}'}
+      - name: hdf5-conversion-4
+        template: hdf5-conversion-4
+        dependencies: [simulation-4]
+        arguments:
+          artifacts:
+          - {name: simulation-4-metadata, from: '{{tasks.simulation-4.outputs.artifacts.simulation-4-metadata}}'}
+      - name: hdf5-correction
+        template: hdf5-correction
+        dependencies: [hdf5-conversion]
+        arguments:
+          artifacts:
+          - {name: hdf5-conversion-metadata, from: '{{tasks.hdf5-conversion.outputs.artifacts.hdf5-conversion-metadata}}'}
+      - name: hdf5-correction-2
+        template: hdf5-correction-2
+        dependencies: [hdf5-conversion-2]
+        arguments:
+          artifacts:
+          - {name: hdf5-conversion-2-metadata, from: '{{tasks.hdf5-conversion-2.outputs.artifacts.hdf5-conversion-2-metadata}}'}
+      - name: hdf5-correction-3
+        template: hdf5-correction-3
+        dependencies: [hdf5-conversion-3]
+        arguments:
+          artifacts:
+          - {name: hdf5-conversion-3-metadata, from: '{{tasks.hdf5-conversion-3.outputs.artifacts.hdf5-conversion-3-metadata}}'}
+      - name: hdf5-correction-4
+        template: hdf5-correction-4
+        dependencies: [hdf5-conversion-4]
+        arguments:
+          artifacts:
+          - {name: hdf5-conversion-4-metadata, from: '{{tasks.hdf5-conversion-4.outputs.artifacts.hdf5-conversion-4-metadata}}'}
+      - {name: simulation, template: simulation}
+      - {name: simulation-2, template: simulation-2}
+      - {name: simulation-3, template: simulation-3}
+      - {name: simulation-4, template: simulation-4}
+  - name: simulation
+    container:
+      args: ['cd /home && git clone --branch kf_pipelines https://github.com/FLC-QU-hep/getting_high.git
+          &&                                 git clone --branch v02-01-pre02 https://github.com/iLCSoft/ILDConfig.git
+          &&                                 cp /secret/krb-secret-vol/krb5cc_1000
+          /tmp/krb5cc_0 &&                                 chmod 600 /tmp/krb5cc_0
+          &&                                 cd $PWD/ILDConfig/StandardConfig/production
+          &&                                 cp /home/getting_high/training_data/*.py
+          . && cp /home/getting_high/training_data/*.sh . &&                                 cp
+          /home/getting_high/training_data/create_root_tree.xml . && cp /home/getting_high/training_data/*.mac
+          . &&                                 chmod +x ./generateG4EOS.sh && ./generateG4EOS.sh
+          "$0" "$1" ', '1', getting_high_10GeV]
+      command: [/bin/bash, -c]
+      image: ilcsoft/ilcsoft-centos7-gcc8.2:v02-01-pre
+      volumeMounts:
+      - {mountPath: /eos, name: eos}
+      - {mountPath: /secret/krb-secret-vol, name: krb-secret-vol}
+    outputs:
+      artifacts:
+      - {name: simulation-metadata, path: /mnt/root_path}
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.9
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+    volumes:
+    - hostPath: {path: /var/eos}
+      name: eos
+    - name: krb-secret-vol
+      secret: {secretName: krb-secret}
+  - name: simulation-2
+    container:
+      args: ['cd /home && git clone --branch kf_pipelines https://github.com/FLC-QU-hep/getting_high.git
+          &&                                 git clone --branch v02-01-pre02 https://github.com/iLCSoft/ILDConfig.git
+          &&                                 cp /secret/krb-secret-vol/krb5cc_1000
+          /tmp/krb5cc_0 &&                                 chmod 600 /tmp/krb5cc_0
+          &&                                 cd $PWD/ILDConfig/StandardConfig/production
+          &&                                 cp /home/getting_high/training_data/*.py
+          . && cp /home/getting_high/training_data/*.sh . &&                                 cp
+          /home/getting_high/training_data/create_root_tree.xml . && cp /home/getting_high/training_data/*.mac
+          . &&                                 chmod +x ./generateG4EOS.sh && ./generateG4EOS.sh
+          "$0" "$1" ', '2', getting_high_10GeV]
+      command: [/bin/bash, -c]
+      image: ilcsoft/ilcsoft-centos7-gcc8.2:v02-01-pre
+      volumeMounts:
+      - {mountPath: /eos, name: eos}
+      - {mountPath: /secret/krb-secret-vol, name: krb-secret-vol}
+    outputs:
+      artifacts:
+      - {name: simulation-2-metadata, path: /mnt/root_path}
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.9
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+    volumes:
+    - hostPath: {path: /var/eos}
+      name: eos
+    - name: krb-secret-vol
+      secret: {secretName: krb-secret}
+  - name: simulation-3
+    container:
+      args: ['cd /home && git clone --branch kf_pipelines https://github.com/FLC-QU-hep/getting_high.git
+          &&                                 git clone --branch v02-01-pre02 https://github.com/iLCSoft/ILDConfig.git
+          &&                                 cp /secret/krb-secret-vol/krb5cc_1000
+          /tmp/krb5cc_0 &&                                 chmod 600 /tmp/krb5cc_0
+          &&                                 cd $PWD/ILDConfig/StandardConfig/production
+          &&                                 cp /home/getting_high/training_data/*.py
+          . && cp /home/getting_high/training_data/*.sh . &&                                 cp
+          /home/getting_high/training_data/create_root_tree.xml . && cp /home/getting_high/training_data/*.mac
+          . &&                                 chmod +x ./generateG4EOS.sh && ./generateG4EOS.sh
+          "$0" "$1" ', '3', getting_high_10GeV]
+      command: [/bin/bash, -c]
+      image: ilcsoft/ilcsoft-centos7-gcc8.2:v02-01-pre
+      volumeMounts:
+      - {mountPath: /eos, name: eos}
+      - {mountPath: /secret/krb-secret-vol, name: krb-secret-vol}
+    outputs:
+      artifacts:
+      - {name: simulation-3-metadata, path: /mnt/root_path}
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.9
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+    volumes:
+    - hostPath: {path: /var/eos}
+      name: eos
+    - name: krb-secret-vol
+      secret: {secretName: krb-secret}
+  - name: simulation-4
+    container:
+      args: ['cd /home && git clone --branch kf_pipelines https://github.com/FLC-QU-hep/getting_high.git
+          &&                                 git clone --branch v02-01-pre02 https://github.com/iLCSoft/ILDConfig.git
+          &&                                 cp /secret/krb-secret-vol/krb5cc_1000
+          /tmp/krb5cc_0 &&                                 chmod 600 /tmp/krb5cc_0
+          &&                                 cd $PWD/ILDConfig/StandardConfig/production
+          &&                                 cp /home/getting_high/training_data/*.py
+          . && cp /home/getting_high/training_data/*.sh . &&                                 cp
+          /home/getting_high/training_data/create_root_tree.xml . && cp /home/getting_high/training_data/*.mac
+          . &&                                 chmod +x ./generateG4EOS.sh && ./generateG4EOS.sh
+          "$0" "$1" ', '4', getting_high_10GeV]
+      command: [/bin/bash, -c]
+      image: ilcsoft/ilcsoft-centos7-gcc8.2:v02-01-pre
+      volumeMounts:
+      - {mountPath: /eos, name: eos}
+      - {mountPath: /secret/krb-secret-vol, name: krb-secret-vol}
+    outputs:
+      artifacts:
+      - {name: simulation-4-metadata, path: /mnt/root_path}
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.9
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+    volumes:
+    - hostPath: {path: /var/eos}
+      name: eos
+    - name: krb-secret-vol
+      secret: {secretName: krb-secret}
+  arguments:
+    parameters: []
+  serviceAccountName: pipeline-runner
