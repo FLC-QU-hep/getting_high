@@ -119,7 +119,7 @@ if __name__=="__main__":
 
 
     #Open HDF5 file for writing
-    hf = h5py.File('/eos/user/e/eneren/run_' + outR + '/pion-shower_' + outP + '.hdf5', 'w')
+    hf = h5py.File('/eos/user/e/eneren/run_' + outR + '/photon-shower_' + outP + '.hdf5', 'w')
     grp = hf.create_group("30x30")
 
 
@@ -131,5 +131,11 @@ if __name__=="__main__":
 
     pool.close()
     pool.join()
+
+
+    ## meta data for hdf5
+    f = open("/mnt/h5_path", "w")
+    f.write('/eos/user/e/eneren/run_' + outR + '/photon-shower_' + outP + '.hdf5')
+    f.close()
 
     print("--- %s seconds ---" % (time.time() - start_time))

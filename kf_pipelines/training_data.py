@@ -57,7 +57,21 @@ def convert_hdf5(rootFile, pname, rname):
                     command=[ '/bin/bash', '-c'],
                     arguments=['git clone --branch kf_pipelines https://github.com/FLC-QU-hep/getting_high.git && cd getting_high/kf_pipelines \
                                 cp /secret/krb-secret-vol/krb5cc_1000 /tmp/krb5cc_0 && chmod 600 /tmp/krb5cc_0 \
-                                && python create_hdf5EOS.py --ncpu 4 --rootfile "$0" --outputR "$1" --outputP "$2" --branch photonSIM --batchsize 100', rootFile, rname, pname]
+                                && python create_hdf5EOS.py --ncpu 4 --rootfile "$0" --outputR "$1" --outputP "$2" --branch photonSIM --batchsize 100', rootFile, rname, pname],
+                    file_outputs={
+                        'metadata': '/mnt/h5_path'
+                    }
+    ).add_volume(eos_volume).add_volume_mount(eos_volume_mount).add_volume(krb_secret_volume).add_volume_mount(krb_secret_volume_mount)   
+
+
+def correction(hdf5File, pname, rname):
+    return dsl.ContainerOp(
+                    name='hdf5 correction',
+                    image='engineren/pytorch:latest',
+                    command=[ '/bin/bash', '-c'],
+                    arguments=['git clone --branch kf_pipelines https://github.com/FLC-QU-hep/getting_high.git && cd getting_high/kf_pipelines \
+                                cp /secret/krb-secret-vol/krb5cc_1000 /tmp/krb5cc_0 && chmod 600 /tmp/krb5cc_0 \
+                                && python correctionsEOS.py --input $0 --outputR "$1" --outputP "$2" --batchsize 1000 --minibatch 4', hdf5File, rname, pname]
             
     ).add_volume(eos_volume).add_volume_mount(eos_volume_mount).add_volume(krb_secret_volume).add_volume_mount(krb_secret_volume_mount)   
 
@@ -81,7 +95,8 @@ def sequential_pipeline():
         simulation = sim(str(i), runN)
         inptLCIO = dsl.InputArgumentPath(simulation.outputs['metadata'])
         hf5 = convert_hdf5(inptLCIO, str(i), runN)
-        
+        hf5Inpt = dsl.InputArgumentPath(hf5.outputs['metadata'])
+        c = correction(hf5Inpt, str(i), runN)
    
     
     
