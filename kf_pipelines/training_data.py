@@ -56,7 +56,7 @@ def convert_hdf5(rootFile, pname, rname):
                     command=[ '/bin/bash', '-c'],
                     arguments=['git clone --branch kf_pipelines https://github.com/FLC-QU-hep/getting_high.git && cd getting_high/kf_pipelines \
                                 && cp /secret/krb-secret-vol/krb5cc_1000 /tmp/krb5cc_0 && chmod 600 /tmp/krb5cc_0 \
-                                && python create_hdf5EOS.py --ncpu 4 --rootfile "$0" --outputR "$1" --outputP "$2" --branch photonSIM --batchsize 100', rootFile, rname, pname],
+                                && python create_hdf5EOS.py --ncpu 4 --rootfile "$0" --outputR "$1" --outputP "$2" --branch photonSIM --batchsize 10', rootFile, rname, pname],
                     file_outputs={
                         'metadata': '/mnt/h5_path'
                     }
@@ -89,8 +89,8 @@ def sequential_pipeline():
    
     ## submit many jobs without control plots
       
-    for i in range(1,5):
-        runN = 'getting_high_90GeV'
+    for i in range(1,2):
+        runN = 'getting_high_100GeV'
         simulation = sim(str(i), runN)
         inptLCIO = dsl.InputArgumentPath(simulation.outputs['metadata'])
         hf5 = convert_hdf5(inptLCIO, str(i), runN)
