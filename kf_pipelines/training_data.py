@@ -89,7 +89,7 @@ def sequential_pipeline():
    
     ## submit many jobs without control plots
       
-    for i in range(6,7):
+    for i in range(1,2):
         runN = 'getting_high_10GeV'
         simulation = sim(str(i), runN)
         inptLCIO = dsl.InputArgumentPath(simulation.outputs['metadata'])
