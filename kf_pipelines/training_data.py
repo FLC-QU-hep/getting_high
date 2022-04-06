@@ -36,7 +36,7 @@ def sim(pname, rname):
                     command=[ '/bin/bash', '-c'],
                     arguments=['cd /home && git clone --branch kf_pipelines https://github.com/FLC-QU-hep/getting_high.git && \
                                 git clone --branch v02-01-pre02 https://github.com/iLCSoft/ILDConfig.git && \
-                                cp /secret/krb-secret-vol/krb5cc_1000 /tmp/krb5cc_0 && ls && \
+                                cp /secret/krb-secret-vol/krb5cc_1000 /tmp/krb5cc_0 && \
                                 chmod 600 /tmp/krb5cc_0 && \
                                 cd $PWD/ILDConfig/StandardConfig/production && \
                                 cp /home/getting_high/kf_pipelines/* . && \
@@ -90,7 +90,7 @@ def sequential_pipeline():
     ## submit many jobs without control plots
       
     for i in range(1,2):
-        runN = 'getting_high_10GeV'
+        runN = 'getting_high_50GeV'
         simulation = sim(str(i), runN)
         inptLCIO = dsl.InputArgumentPath(simulation.outputs['metadata'])
         hf5 = convert_hdf5(inptLCIO, str(i), runN)

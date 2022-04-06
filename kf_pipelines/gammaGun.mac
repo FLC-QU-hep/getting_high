@@ -26,10 +26,10 @@
 /gps/pos/centre 0.0 50.0 0.0
 /gps/direction 0 1 0
 /gps/ene/type Pow
-/gps/ene/min 10.0 GeV	
-/gps/ene/max 10.0 GeV
+/gps/ene/min 50.0 GeV	
+/gps/ene/max 50.0 GeV
 /gps/ene/alpha 0.
 
 
 /gps/number 1 
-/run/beamOn 1000
+/run/beamOn 2000
