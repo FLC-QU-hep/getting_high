@@ -90,7 +90,7 @@ def sequential_pipeline():
     ## submit many jobs without control plots
       
     for i in range(1,2):
-        runN = 'getting_high_70GeV'
+        runN = 'getting_high_80GeV'
         simulation = sim(str(i), runN)
         inptLCIO = dsl.InputArgumentPath(simulation.outputs['metadata'])
         hf5 = convert_hdf5(inptLCIO, str(i), runN)
