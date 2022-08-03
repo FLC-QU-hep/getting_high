@@ -20,7 +20,7 @@ def correct2D(dpath, BATCH_SIZE, minibatch):
 
 
     dataloader = torch.utils.data.DataLoader(training_dataset, batch_size=BATCH_SIZE,
-                                            shuffle=True, num_workers=4)
+                                            shuffle=True, num_workers=0)
     dataiter = iter(dataloader)
 
     corr_data = []
@@ -42,8 +42,9 @@ def correct2D(dpath, BATCH_SIZE, minibatch):
 
         real_d = real_data.mean(axis=0)
         for layer_pos in range(len(real_d)):
+            if layer_pos < 4 or layer_pos > 27: continue
             for row_pos in range(len(real_d[0])):
-                if real_d[layer_pos, row_pos].sum().item() < 0.001:
+                if real_d[layer_pos, row_pos].sum().item() < 0.0001:
                     for i in range(row_pos, 0, -1):
                         real_data[:, layer_pos, i] = real_data[:, layer_pos, i-1]
         real_data = real_data[:, :, 1:-1]

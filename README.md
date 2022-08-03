@@ -63,10 +63,10 @@ singularity run -H $PWD docker://engineren/pytorch:latest python create_hdf5.py 
 Our simulation of ILD calorimeter is a realistic one. That's why we have irregularities in geometry. This causes staggering in `x` direction; we see artifacts (i.e empty lines due to binning). In order to mitigate this effect, we apply a correction and thus remove artifacts.
 
 ```bash
-singularity run -H $PWD docker://engineren/pytorch:latest python corrections.py --input test_30x32.hdf5 --output showers-1k.hdf5 --batchsize 100 --minibatch 10
+singularity run -H $PWD docker://engineren/pytorch:latest python corrections.py --input test_30x32.hdf5 --output showers-1k.hdf5 --batchsize 1000 --minibatch 1
 ```
 
-choose batchsize and mini-batch size such a way that `total showers = batchsize  * minibatch` (i.e 1000 = 100 * 10 )
+choose batchsize and mini-batch size such a way that `total showers = batchsize  * minibatch` (i.e 1000 = 1000 * 1 )
 
 #### Structure of HDF5 file
 
