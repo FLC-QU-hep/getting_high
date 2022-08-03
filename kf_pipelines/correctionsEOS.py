@@ -42,8 +42,10 @@ def correct2D(dpath, BATCH_SIZE, minibatch):
 
         real_d = real_data.mean(axis=0)
         for layer_pos in range(len(real_d)):
+            if layer_pos < 4 or layer_pos > 27: continue
             for row_pos in range(len(real_d[0])):
-                if real_d[layer_pos, row_pos].sum().item() < 0.001:
+                if real_d[layer_pos, row_pos].sum().item() < 0.0001:
+                    print(real_d[layer_pos, row_pos].sum().item(), layer_pos)
                     for i in range(row_pos, 0, -1):
                         real_data[:, layer_pos, i] = real_data[:, layer_pos, i-1]
         real_data = real_data[:, :, 1:-1]
@@ -65,7 +67,7 @@ parser.add_argument('--minibatch', type=int, required=True, help='mini-batchsize
 opt = parser.parse_args()
 
 inp_path = str(opt.input)
-inp_pathReal = os.popen('cat {}'.format(inp_path)).read().rstrip("\n")
+#inp_pathReal = os.popen('cat {}'.format(inp_path)).read().rstrip("\n")
 
 outP = str(opt.outputP)
 outR = str(opt.outputR)
@@ -73,10 +75,11 @@ outR = str(opt.outputR)
 BS = int(opt.batchsize)
 mbatch = int(opt.minibatch)
 
-pixs, energy = correct2D(inp_pathReal, BS, mbatch)
+pixs, energy = correct2D(inp_path, BS, mbatch)
 
 #Open HDF5 file for writing
-hf = h5py.File('/eos/user/e/eneren/run_' + outR + '/photon-shower_30x30_' + outP + '.hdf5', 'w')
+hf = h5py.File(outR + '_photon-shower_30x30_' + outP + '.hdf5', 'w')
+#hf = h5py.File('/eos/user/e/eneren/run_' + outR + '/photon-shower_30x30_' + outP + '.hdf5', 'w')
 grp = hf.create_group("30x30")
 
 
